@@ -1,0 +1,79 @@
+.choice-page {
+  min-height: 100vh;
+  padding: 18px 16px 20px;
+  background: #f1f5f9;
+}
+
+.choice-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #0f172a;
+}
+
+.choice-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 14px 14px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.choice-card-light {
+  background: linear-gradient(135deg, #e0f2fe, #f9fafb);
+  box-shadow: none;
+}
+
+.choice-card img {
+  width: 90px;
+  height: 90px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.choice-text h2 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.choice-text p {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.choice-btn-primary,
+.choice-btn-outline,
+.choice-btn-ghost {
+  font-size: 0.8rem;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+.choice-btn-primary {
+  background: linear-gradient(135deg, #0b66c3, #38bdf8);
+  color: #ffffff;
+}
+
+.choice-btn-outline {
+  background: #ffffff;
+  color: #0b66c3;
+  border: 1px solid #0b66c3;
+}
+
+.choice-btn-ghost {
+  background: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+
+@media (min-width: 640px) {
+  .choice-card {
+    padding: 16px 18px;
+  }
+}

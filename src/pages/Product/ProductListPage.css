@@ -1,0 +1,143 @@
+.product-page {
+  min-height: 100vh;
+  padding: 18px 16px 20px;
+  background: #f1f5f9;
+}
+
+.product-hero h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #0f172a;
+}
+
+.product-hero p {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.product-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.product-card-highlighted {
+  border: 1px solid #0b66c3;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.16);
+}
+
+.product-card-main {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.product-card-text h2 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.product-tag {
+  font-size: 0.78rem;
+  color: #0b66c3;
+  margin-bottom: 2px;
+}
+
+.product-limit {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.product-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.product-price-meta {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.product-deposit {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.product-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.product-features {
+  margin: 10px 0 8px;
+  padding-left: 18px;
+}
+
+.product-features li {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-bottom: 3px;
+}
+
+.product-cta-btn {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #e0f2fe;
+  color: #0b66c3;
+}
+
+.product-cta-btn-primary {
+  background: linear-gradient(135deg, #0b66c3, #38bdf8);
+  color: #ffffff;
+}
+
+.product-faq {
+  margin-top: 16px;
+}
+
+.product-faq h3 {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.product-faq ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.product-faq li {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-bottom: 2px;
+}
+
+@media (min-width: 640px) {
+  .product-card-main {
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,71 @@
+.pay-page {
+  padding-bottom: 10px;
+}
+
+.pay-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.pay-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.pay-list {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.pay-row {
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pay-row:last-child {
+  border-bottom: none;
+}
+
+.pay-id {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.pay-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.pay-right {
+  text-align: right;
+}
+
+.pay-amount {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pay-pill {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+}
+
+.pay-pill-success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.pay-pill-failed {
+  background: #fee2e2;
+  color: #b91c1c;
+}

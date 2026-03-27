@@ -1,0 +1,150 @@
+.checkout-page {
+  min-height: 100vh;
+  padding: 16px 16px 20px;
+  background: #f1f5f9;
+}
+
+.checkout-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.checkout-header h1 {
+  font-size: 1.25rem;
+  margin-bottom: 2px;
+}
+
+.checkout-header p {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.checkout-back-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #e5e7eb;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.checkout-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.checkout-summary h2,
+.checkout-form h2 {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.checkout-summary-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 14px 14px 10px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.checkout-plan-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.checkout-plan-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.checkout-plan-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0;
+}
+
+.checkout-plan-total {
+  font-weight: 600;
+}
+
+.checkout-note {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.checkout-form {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkout-field label {
+  display: block;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 3px;
+}
+
+.checkout-field input,
+.checkout-field textarea,
+.checkout-field select {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  padding: 9px 10px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.checkout-field textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.checkout-field input:focus,
+.checkout-field textarea:focus,
+.checkout-field select:focus {
+  border-color: #0b66c3;
+  box-shadow: 0 0 0 1px rgba(11, 102, 195, 0.1);
+}
+
+.checkout-field-row {
+  display: flex;
+  gap: 8px;
+}
+
+.checkout-pay-btn {
+  margin-top: 6px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #0b66c3, #38bdf8);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkout-safe-text {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+@media (min-width: 640px) {
+  .checkout-layout {
+    gap: 16px;
+  }
+}

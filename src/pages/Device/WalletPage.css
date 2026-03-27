@@ -1,0 +1,96 @@
+.wallet-page {
+  padding-bottom: 10px;
+}
+
+.wallet-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.wallet-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.wallet-card-main {
+  background: #0b66c3;
+  border-radius: 22px;
+  padding: 16px 16px 14px;
+  color: #e5f0ff;
+  margin-bottom: 12px;
+}
+
+.wallet-balance-label {
+  font-size: 0.8rem;
+}
+
+.wallet-balance-amount {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.wallet-balance-meta {
+  font-size: 0.8rem;
+  color: #bfdbfe;
+  margin-top: 2px;
+}
+
+.wallet-add-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.wallet-pill {
+  flex: 1;
+  padding: 7px 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15, 23, 42, 0.15);
+  color: #e5f0ff;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.wallet-btn-primary {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  color: #0b66c3;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.wallet-info-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.wallet-info-card h3 {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.wallet-info-card p {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.wallet-btn-secondary {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: none;
+  background: #e0f2fe;
+  color: #0b66c3;
+  font-size: 0.8rem;
+  cursor: pointer;
+}

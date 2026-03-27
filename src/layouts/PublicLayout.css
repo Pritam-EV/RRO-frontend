@@ -1,0 +1,16 @@
+/* src/layouts/PublicLayout.css */
+.public-layout {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f3f7ff;
+}
+
+.public-layout-inner {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: #ffffff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}

@@ -1,0 +1,161 @@
+.dash-home {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.dash-main-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dash-main-left h2 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.dash-main-status {
+  font-size: 0.8rem;
+  color: #16a34a;
+}
+
+.dash-main-plan {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.dash-main-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.dash-badge {
+  font-size: 0.7rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.dash-tds-label {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.dash-tds-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dash-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.dash-usage-card .dash-card-header,
+.dash-wallet-card .dash-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.dash-chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+}
+
+.dash-usage-value {
+  margin-top: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.dash-usage-bar {
+  margin-top: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.dash-usage-bar-fill {
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(135deg, #0b66c3, #38bdf8);
+}
+
+.dash-usage-sub {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.dash-wallet-main {
+  margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.dash-wallet-amount {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dash-wallet-tag {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.dash-btn-secondary {
+  margin-top: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 12px;
+  background: #0b66c3;
+  color: #ffffff;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.dash-actions h3 {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.dash-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dash-action-chip {
+  border-radius: 999px;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  background: #e0f2fe;
+  color: #0b66c3;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .dash-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

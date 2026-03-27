@@ -1,0 +1,10 @@
+:root {
+  --color-primary: #0b66c3;
+  --color-primary-light: #38bdf8;
+  --color-bg: #f3f7ff;
+  --color-text: #111827;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --font-main: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
