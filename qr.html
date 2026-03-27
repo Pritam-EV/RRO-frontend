@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purifier Connect</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Logo */
+.logo {
+    font-size: 40px;
+    font-weight: bold;
+    color: #4a4fc1;
+    margin-top: 20px;
+}
+
+/* Title */
+h2 {
+    margin: 30px 0 20px;
+    font-size: 24px;
+}
+
+/* Input with QR */
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 15px;
+    padding-right: 60px;
+    border-radius: 12px;
+    border: none;
+    background: #eaeaea;
+    font-size: 16px;
+}
+
+.qr {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.primary {
+    background: #4a4fc1;
+    color: white;
+}
+
+.outline {
+    background: white;
+    color: #4a4fc1;
+    border: 2px solid #4a4fc1;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.divider div {
+    flex: 1;
+    height: 1px;
+    background: #ccc;
+}
+
+.divider span {
+    margin: 0 10px;
+}
+
+/* Bottom cards */
+.card-container {
+    display: flex;
+    gap: 10px;
+}
+
+.card {
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.card p {
+    font-size: 12px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">AquaRental</div>
+
+    <h2>Enter Purifier ID</h2>
+
+    <div class="input-box">
+        <input type="text" id="purifierId" placeholder="Enter ID">
+        <img src="asset/qr.webp" class="qr">
+    </div>
+
+   <button id="connectBtn" class="btn primary">Connect</button>
+
+<button id="requestBtn" class="btn outline">Request New Purifier</button>
+
+
+
+    <div class="divider">
+        <div></div>
+        <span>OR</span>
+        <div></div>
+    </div>
+
+    <div class="card-container">
+        <div class="card">
+            <h4>Chat with support</h4>
+            <p>If purifier is not activated & you are unable to login into the app</p>
+        </div>
+
+        <div class="card" id="logoutCard">
+            <h4>Logout</h4>
+            <p>If you are looking to refer without a purifier, please login again</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ✅ SCRIPT START -->
+<script>
+const connectBtn = document.getElementById("connectBtn");
+const requestBtn = document.getElementById("requestBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// 👉 CONNECT → LANDING
+connectBtn.onclick = () => {
+  window.location.href = "landing.html";
+};
+
+// 👉 REQUEST → LANDING
+requestBtn.onclick = () => {
+  window.location.href = "landing.html";
+};
+
+// 👉 LOGOUT → BACK TO START PAGE
+logoutBtn.onclick = () => {
+  window.location.href = "index.html";
+};
+</script>
+<!-- ✅ SCRIPT END -->
+
+</body>
+</html>
