@@ -10,46 +10,54 @@ export default function UsagePage() {
   const [devId,   setDevId]   = useState(null);
   const [activeBar, setActiveBar] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const { data: subRes } = await api.get("/subscriptions/my");
-        const sub = subRes?.data?.subscription;
-        const rawDevice = sub?.deviceId;
-        const deviceIdStr =
-          typeof rawDevice === "object" && rawDevice?.deviceId
-            ? rawDevice.deviceId : null;
+useEffect(() => {
+  (async () => {
+    try {
+      setLoading(true);
 
-        if (!deviceIdStr) { setError("No active device linked to your subscription."); return; }
-        setDevId(deviceIdStr);
+      // Step 1: get deviceId from subscription
+      const { data: subRes } = await api.get("/subscriptions/my");
+      const sub = subRes?.data?.subscription;
+      const rawDevice = sub?.deviceId;
+      const deviceIdStr =
+        typeof rawDevice === "object" && rawDevice?.deviceId
+          ? rawDevice.deviceId : null;
 
-        const { data: histRes } = await api.get(`/water/${deviceIdStr}/history?days=7`);
-        const rawLogs = histRes?.data?.logs ?? [];
-
-        const today = new Date();
-        const filled = Array.from({ length: 7 }, (_, i) => {
-          const d = new Date(today);
-          d.setDate(today.getDate() - (6 - i));
-          const dateStr = d.toISOString().split("T")[0];
-          const found   = rawLogs.find((l) => l.date === dateStr);
-          const isToday = i === 6;
-          return {
-            dateStr,
-            label: d.toLocaleDateString("en-IN", { weekday: "short" }).slice(0, 3),
-            litres: found?.totalLitresToday ?? 0,
-            isToday,
-          };
-        });
-        setLogs(filled);
-        setActiveBar(6); // default highlight today
-      } catch (e) {
-        setError(e?.response?.data?.message || "Failed to load usage data.");
-      } finally {
-        setLoading(false);
+      if (!deviceIdStr) {
+        setError("No active device linked to your subscription.");
+        return;
       }
-    })();
-  }, []);
+      setDevId(deviceIdStr);
+
+      // Step 2: use /overview which has today's real data
+      const { data: ovRes } = await api.get(`/water/${deviceIdStr}/overview`);
+      const ovData = ovRes?.data;
+
+      // Step 3: build 7-day array — today has real data, past 6 days show 0
+      // (until a DailyLog collection is added for historical data)
+      const today = new Date();
+      const filled = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(today);
+        d.setDate(today.getDate() - (6 - i));
+        const dateStr = d.toISOString().split("T")[0];
+        const isToday = i === 6;
+        return {
+          dateStr,
+          label: d.toLocaleDateString("en-IN", { weekday: "short" }).slice(0, 3),
+          litres: isToday ? (ovData?.todayLitres ?? 0) : 0,
+          isToday,
+        };
+      });
+
+      setLogs(filled);
+      setActiveBar(6);
+    } catch (e) {
+      setError(e?.response?.data?.message || "Failed to load usage data.");
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, []);
 
   const totalWeek  = logs.reduce((s, l) => s + l.litres, 0);
   const avgDay     = logs.length ? (totalWeek / logs.length).toFixed(1) : "0.0";
