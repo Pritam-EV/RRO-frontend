@@ -1,0 +1,609 @@
+/* ═══════════════════════════════════════════════════════════
+   auth.css — Shared Auth Design System
+   Pages: Login, Signup, OTP, Register, ForgotPassword
+   Theme: Light · Poppins · Blue/Purple/Pink gradient
+═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ── Tokens ──────────────────────────────────────────────── */
+:root {
+  --a-blue:        #4F6EF7;
+  --a-purple:      #8B5CF6;
+  --a-pink:        #EC4899;
+  --a-grad:        linear-gradient(135deg, #4F6EF7 0%, #8B5CF6 50%, #EC4899 100%);
+  --a-grad-soft:   linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 50%, #FDF2F8 100%);
+  --a-surface:     #ffffff;
+  --a-bg:          #F8F9FF;
+  --a-border:      rgba(79, 110, 247, 0.15);
+  --a-border-focus:rgba(79, 110, 247, 0.5);
+  --a-text:        #0F172A;
+  --a-muted:       #64748B;
+  --a-faint:       #94A3B8;
+  --a-error-bg:    #FFF1F2;
+  --a-error-border:#FECDD3;
+  --a-error-text:  #BE123C;
+  --a-success:     #10B981;
+  --a-radius:      14px;
+  --a-radius-sm:   8px;
+  --a-radius-pill: 100px;
+  --a-shadow:      0 8px 32px rgba(79, 110, 247, 0.10), 0 2px 8px rgba(0,0,0,0.04);
+  --a-shadow-input: 0 0 0 3.5px rgba(79, 110, 247, 0.12);
+  --font:          'Poppins', -apple-system, sans-serif;
+}
+
+/* ── Page shell ──────────────────────────────────────────── */
+.a-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--a-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(79,110,247,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(236,72,153,0.07) 0%, transparent 55%);
+  padding: 1.25rem;
+  font-family: var(--font);
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.a-card {
+  background: var(--a-surface);
+  border-radius: 24px;
+  box-shadow: var(--a-shadow);
+  border: 1px solid rgba(255,255,255,0.8);
+  padding: 2.5rem 2.25rem 2.25rem;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient top edge */
+.a-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--a-grad);
+  border-radius: 24px 24px 0 0;
+}
+
+/* ── Logo / Brand ────────────────────────────────────────── */
+.a-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.75rem;
+}
+
+.a-brand-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--a-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 16px rgba(139,92,246,0.30);
+}
+
+.a-brand-mark span {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* ── Headings ────────────────────────────────────────────── */
+.a-title {
+  font-size: 1.4375rem;
+  font-weight: 700;
+  color: var(--a-text);
+  text-align: center;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.3px;
+}
+
+.a-subtitle {
+  font-size: 0.8375rem;
+  color: var(--a-muted);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.a-subtitle strong {
+  color: var(--a-blue);
+  font-weight: 600;
+}
+
+/* ── Tab Switcher (Apple segmented control) ──────────────── */
+.a-tabs {
+  display: flex;
+  background: #F1F3FA;
+  border-radius: var(--a-radius-pill);
+  padding: 3px;
+  margin-bottom: 1.5rem;
+  gap: 3px;
+}
+
+.a-tab {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  border-radius: var(--a-radius-pill);
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--a-muted);
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+
+.a-tab.active {
+  background: #fff;
+  color: var(--a-blue);
+  font-weight: 600;
+  box-shadow: 0 1px 6px rgba(79,110,247,0.15), 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* ── Form ────────────────────────────────────────────────── */
+.a-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.a-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.a-field label {
+  font-size: 0.7875rem;
+  font-weight: 600;
+  color: var(--a-text);
+  letter-spacing: 0.1px;
+}
+
+/* ── Input wrapper ───────────────────────────────────────── */
+.a-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #F8F9FF;
+  border: 1.5px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  overflow: hidden;
+}
+
+.a-input-wrap:focus-within {
+  border-color: var(--a-blue);
+  box-shadow: var(--a-shadow-input);
+  background: #fff;
+}
+
+.a-prefix {
+  padding: 0 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--a-muted);
+  background: transparent;
+  border-right: 1.5px solid var(--a-border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  user-select: none;
+  min-width: 52px;
+  justify-content: center;
+}
+
+.a-input-wrap input {
+  flex: 1;
+  padding: 0.75rem 0.875rem;
+  border: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--a-text);
+  background: transparent;
+}
+
+.a-input-wrap input::placeholder {
+  color: var(--a-faint);
+}
+
+.a-eye {
+  padding: 0 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--a-faint);
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  transition: color 150ms;
+}
+
+.a-eye:hover { color: var(--a-muted); }
+
+/* ── Forgot link ─────────────────────────────────────────── */
+.a-forgot {
+  text-align: right;
+  margin-top: -0.25rem;
+}
+
+.a-forgot a {
+  font-size: 0.775rem;
+  font-weight: 500;
+  color: var(--a-purple);
+  text-decoration: none;
+  transition: opacity 150ms;
+}
+
+.a-forgot a:hover { opacity: 0.75; }
+
+/* ── Hint text ───────────────────────────────────────────── */
+.a-hint {
+  font-size: 0.775rem;
+  color: var(--a-faint);
+  margin-top: -0.25rem;
+  line-height: 1.5;
+}
+
+/* ── Error ───────────────────────────────────────────────── */
+.a-error {
+  background: var(--a-error-bg);
+  border: 1px solid var(--a-error-border);
+  color: var(--a-error-text);
+  border-radius: var(--a-radius-sm);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.a-error::before { content: '⚠'; font-size: 0.85rem; }
+
+/* ── Primary button (gradient) ───────────────────────────── */
+.a-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.8125rem 1rem;
+  background: var(--a-grad);
+  color: #fff;
+  border: none;
+  border-radius: var(--a-radius-sm);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  letter-spacing: 0.1px;
+  transition: opacity 200ms ease, transform 150ms ease, box-shadow 200ms ease;
+  box-shadow: 0 4px 14px rgba(139,92,246,0.30);
+}
+
+.a-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(139,92,246,0.38);
+}
+
+.a-btn:active:not(:disabled) { transform: translateY(0); }
+
+.a-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Ghost / transparent button (Apple style) ────────────── */
+.a-btn-ghost {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(79,110,247,0.06);
+  color: var(--a-blue);
+  border: 1.5px solid rgba(79,110,247,0.18);
+  border-radius: var(--a-radius-sm);
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  letter-spacing: 0.1px;
+  transition: all 180ms ease;
+  backdrop-filter: blur(8px);
+}
+
+.a-btn-ghost:hover:not(:disabled) {
+  background: rgba(79,110,247,0.1);
+  border-color: rgba(79,110,247,0.32);
+}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.a-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: a-spin 0.65s linear infinite;
+}
+
+@keyframes a-spin { to { transform: rotate(360deg); } }
+
+/* ── Bottom switch link ──────────────────────────────────── */
+.a-switch {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--a-muted);
+  margin-top: 1.25rem;
+}
+
+.a-switch a {
+  font-weight: 600;
+  background: var(--a-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.a-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0;
+}
+
+.a-divider::before, .a-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.07);
+}
+
+.a-divider span {
+  font-size: 0.75rem;
+  color: var(--a-faint);
+  font-weight: 500;
+}
+
+/* ── OTP inputs ──────────────────────────────────────────── */
+.a-otp-row {
+  display: flex;
+  gap: 0.625rem;
+  justify-content: center;
+  margin: 1.5rem 0 1.25rem;
+}
+
+.a-otp-input {
+  width: 48px;
+  height: 56px;
+  border: 1.5px solid var(--a-border);
+  border-radius: var(--a-radius-sm);
+  text-align: center;
+  font-family: var(--font);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--a-text);
+  background: #F8F9FF;
+  outline: none;
+  transition: all 180ms ease;
+  caret-color: var(--a-blue);
+}
+
+.a-otp-input:focus {
+  border-color: var(--a-blue);
+  box-shadow: var(--a-shadow-input);
+  background: #fff;
+}
+
+.a-otp-input.filled {
+  border-color: var(--a-purple);
+  background: linear-gradient(135deg, #EEF2FF, #F5F3FF);
+  color: var(--a-purple);
+}
+
+.a-otp-input:disabled { opacity: 0.45; }
+
+/* ── Resend ──────────────────────────────────────────────── */
+.a-resend {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--a-muted);
+  margin-top: 1rem;
+}
+
+.a-timer { font-weight: 700; color: var(--a-purple); }
+
+.a-resend-btn {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--a-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Field addons ────────────────────────────────────────── */
+.req { color: var(--a-pink); margin-left: 2px; }
+
+.opt {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--a-faint);
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ── Password strength bar ───────────────────────────────── */
+.a-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: 0.375rem;
+}
+
+.a-strength-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 99px;
+  background: #E2E8F0;
+  transition: background 300ms ease;
+}
+
+.a-strength-bar.weak   { background: #F87171; }
+.a-strength-bar.medium { background: #FBBF24; }
+.a-strength-bar.strong { background: var(--a-success); }
+
+/* ── Success state ───────────────────────────────────────── */
+.a-success-box {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.a-success-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.75rem;
+}
+
+.a-success-box h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--a-text);
+  margin-bottom: 0.375rem;
+}
+
+.a-success-box p {
+  font-size: 0.8375rem;
+  color: var(--a-muted);
+}
+
+/* ── Step progress dots ──────────────────────────────────── */
+.a-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.a-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: #E2E8F0;
+  transition: all 300ms ease;
+}
+
+.a-step-dot.done { background: var(--a-success); width: 20px; }
+.a-step-dot.active {
+  background: var(--a-blue);
+  width: 24px;
+  box-shadow: 0 0 0 3px rgba(79,110,247,0.2);
+}
+
+/* ── Back button ─────────────────────────────────────────── */
+.a-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--a-muted);
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  padding: 0;
+  transition: color 150ms;
+}
+
+.a-back:hover { color: var(--a-blue); }
+
+/* ── Field-level error text ──────────────────────────────── */
+.a-field-err {
+  font-size: 0.75rem;
+  color: var(--a-error-text);
+  font-weight: 500;
+  margin-top: -0.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.a-field-err::before { content: "⚠ "; font-size: 0.7rem; }
+
+/* Input error border state */
+.a-input-wrap.input-err {
+  border-color: #F87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.12);
+}
+
+/* ── Password match indicator ────────────────────────────── */
+.a-field-match {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: -0.125rem;
+}
+
+.a-field-match.match   { color: var(--a-success); }
+.a-field-match.no-match { color: var(--a-error-text); }
+
+/* ── Strength row with label ─────────────────────────────── */
+.a-strength-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.375rem;
+}
+
+.a-strength-wrap .a-strength { flex: 1; margin: 0; }
+
+.a-strength-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--a-muted);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ── Mobile responsive ───────────────────────────────────── */
+@media (max-width: 460px) {
+  .a-card { padding: 2rem 1.375rem 1.75rem; border-radius: 20px; }
+  .a-otp-input { width: 42px; height: 50px; font-size: 1.2rem; }
+  .a-title { font-size: 1.25rem; }
+}

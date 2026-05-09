@@ -1,0 +1,184 @@
+/* WalletPage - Mobile App Theme */
+.wallet-page {
+  padding-bottom: 20px;
+  color: var(--color-text);
+  font-family: var(--font-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at bottom right, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+  animation: float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.wallet-page::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  right: -30%;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(240, 147, 251, 0.08) 0%, transparent 50%);
+  animation: float 10s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+
+.wallet-title {
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 4px;
+  background: linear-gradient(45deg, var(--color-text), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wallet-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 14px;
+}
+
+.wallet-card-main {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  color: var(--color-text);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-normal);
+}
+
+.wallet-card-main:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+.wallet-balance-label {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  color: var(--color-text-secondary);
+}
+
+.wallet-balance-amount {
+  font-size: 1.8rem;
+  font-weight: var(--font-weight-bold);
+  margin-top: 2px;
+  color: var(--color-text);
+  background: linear-gradient(45deg, var(--color-text), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wallet-balance-meta {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin-top: 2px;
+  color: var(--color-text-muted);
+}
+
+.wallet-add-row {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.wallet-pill {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: var(--glass-blur);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  font-weight: var(--font-weight-medium);
+}
+
+.wallet-pill:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.wallet-btn-primary {
+  margin-top: 12px;
+  width: 30%;
+  padding: 12px;
+  border-radius: var(--radius-pill);
+  border: none;
+  margin-left: 30%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-soft);
+}
+
+.wallet-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* INFO CARD (GLASS) */
+.wallet-info-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-normal);
+}
+
+.wallet-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+
+/* INFO TEXT */
+.wallet-info-card h3 {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.wallet-info-card p {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+/* SECONDARY BUTTON */
+.wallet-btn-secondary {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: none;
+
+  background: rgba(79,172,254,0.2);
+  color: #4facfe;
+
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.wallet-btn-secondary:hover {
+  background: rgba(79,172,254,0.35);
+}

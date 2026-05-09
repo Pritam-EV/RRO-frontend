@@ -1,0 +1,66 @@
+/* TOP BAR HEADER */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.logo-img {
+  height: 42px;
+  width: auto;
+  max-width: 140px;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(45deg, var(--color-text), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+}
+
+.profile {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.profile:hover {
+  transform: scale(1.1);
+}
+
+.profile img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+  object-fit: cover;
+}
+.top-bar {
+  position: relative;
+  z-index: 100;
+}
+
+.profile {
+  position: relative;
+  z-index: 200;
+  cursor: pointer;
+}

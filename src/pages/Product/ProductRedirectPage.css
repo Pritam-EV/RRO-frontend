@@ -1,0 +1,186 @@
+/* Mobile App Product Redirect Page */
+.product-redirect {
+  min-height: 100vh;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  font-family: var(--font-main);
+  position: relative;
+  animation: pageFadeIn 0.8s ease-out;
+  background: linear-gradient(180deg, #020617 0%, #071028 60%, #08172f 100%);
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Background Effects */
+.product-redirect::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -40%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(59,130,246,0.18), transparent 42%);
+  animation: redirectFloat 10s ease-in-out infinite;
+  z-index: -2;
+}
+
+.product-redirect::after {
+  content: '';
+  position: fixed;
+  bottom: -35%;
+  right: -35%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle, rgba(14,165,233,0.12), transparent 45%);
+  animation: redirectFloat 12s ease-in-out infinite reverse;
+  z-index: -1;
+}
+
+
+@keyframes redirectFloat {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(2deg);
+  }
+}
+
+/* Loader */
+.product-loader {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid var(--glass-border);
+  border-top-color: var(--color-primary);
+  animation: productSpin 1s linear infinite;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.product-loader::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--color-secondary);
+  animation: productSpin 1.5s linear infinite;
+}
+
+@keyframes productSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Content */
+.product-redirect h2 {
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 12px;
+  background: linear-gradient(45deg, var(--color-text), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.product-redirect p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0;
+}
+
+/* Progress Indicator */
+.redirect-progress {
+  margin-top: 32px;
+  width: 200px;
+  height: 4px;
+  background: var(--glass-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.redirect-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-pill);
+  animation: progressFill 3s ease-out;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Status Messages */
+.redirect-status {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  animation: statusSlideUp 0.5s ease-out 1s both;
+}
+
+@keyframes statusSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .product-redirect {
+    padding: 24px 16px;
+  }
+
+  .product-loader {
+    width: 50px;
+    height: 50px;
+  }
+
+  .product-redirect h2 {
+    font-size: 1.2rem;
+  }
+
+  .product-redirect p {
+    font-size: 0.9rem;
+  }
+
+  .redirect-progress {
+    width: 180px;
+  }
+}

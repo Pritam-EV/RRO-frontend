@@ -1,0 +1,48 @@
+/* Mobile App Public Layout */
+.public-layout {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Effects */
+.public-layout::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000;
+  z-index: -2;
+}
+
+.public-layout::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(circle at 20% 70%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 75% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 35%);
+  z-index: -1;
+  animation: publicFloat 12s ease-in-out infinite alternate;
+}
+
+@keyframes publicFloat {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.08) rotate(-1deg);
+  }
+}
+
+.public-layout-inner {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}

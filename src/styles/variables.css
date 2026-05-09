@@ -1,0 +1,44 @@
+:root {
+  /* Mobile App Theme Colors */
+  --color-primary: #38bdf8;
+  --color-secondary: #8b5cf6;
+  --color-accent: #f472b6;
+  --color-bg-gradient-start: #000000;
+  --color-bg-gradient-end: #050505;
+  --color-bg-dark: #000000;
+  --color-bg-card: rgba(255, 255, 255, 0.08);
+  --color-text: #f8fafc;
+  --color-text-secondary: rgba(248, 250, 252, 0.82);
+  --color-text-muted: rgba(248, 250, 252, 0.6);
+  --color-border: rgba(248, 250, 252, 0.12);
+  --color-border-focus: #38bdf8;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(20px);
+
+  /* Spacing & Layout */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+
+  /* Typography */
+  --font-main: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
