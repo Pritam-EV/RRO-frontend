@@ -1,5 +1,6 @@
-/* ── Page shell ── */
-.sp-page {
+/* ─── My Plans Page ─────────────────────────────────────────── */
+
+.myplan-page {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -10,94 +11,83 @@
   box-sizing: border-box;
 }
 
-/* ── Top bar ── */
-.sp-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px 10px;
-  background: #fff;
-  border-bottom: 1px solid #f1f5f9;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.sp-topbar__title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #111827;
-}
-
-.sp-back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: #f3f4f6;
-  border-radius: 8px;
-  color: #374151;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-.sp-back:hover { background: #e5e7eb; }
-
-/* ── Scrollable body ── */
-.sp-body {
+/* ── Scrollable body — same padding as ProductListPage ── */
+.myplan-body {
   flex: 1;
-  padding: 16px 14px 32px;
+  padding: 14px 12px 90px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-sizing: border-box;
 }
 
-/* ── Section label ── */
-.sp-section__label {
+/* ── Section ── */
+.myplan-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.myplan-section__label {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #9ca3af;
-  margin: 0 0 10px 2px;
+}
+
+.myplan-section__count {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+/* ── List ── */
+.myplan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* ── Card ── */
-.sp-card {
+.myplan-card {
   background: #fff;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
   overflow: hidden;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sp-card--active {
+.myplan-card--live {
   border-color: rgba(55, 93, 251, 0.25);
-  box-shadow: 0 2px 12px rgba(55, 93, 251, 0.08);
+  box-shadow: 0 2px 12px rgba(55, 93, 251, 0.07);
 }
 
-.sp-card--open {
+.myplan-card--open {
   border-color: rgba(55, 93, 251, 0.4);
   box-shadow: 0 4px 20px rgba(55, 93, 251, 0.1);
 }
 
-/* ── Card header (always visible) ── */
-.sp-card__header {
+/* ── Collapsed row ── */
+.myplan-card__row {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 13px 14px;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
-  gap: 12px;
   -webkit-tap-highlight-color: transparent;
 }
 
-.sp-card__left {
+.myplan-card__info {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -105,36 +95,37 @@
   gap: 3px;
 }
 
-.sp-card__title-row {
+.myplan-card__top {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.sp-card__brand {
+.myplan-card__brand {
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   color: #375dfb;
 }
 
-.sp-card__live {
+/* Pulsing green dot for live subscriptions */
+.myplan-card__pulse {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: #10b981;
-  animation: sp-pulse 2s ease-in-out infinite;
   flex-shrink: 0;
+  animation: myplan-pulse 2s ease-in-out infinite;
 }
 
-@keyframes sp-pulse {
+@keyframes myplan-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.85); }
+  50%       { opacity: 0.45; transform: scale(0.8); }
 }
 
-.sp-card__model {
-  font-size: 15px;
+.myplan-card__model {
+  font-size: 14px;
   font-weight: 700;
   color: #111827;
   line-height: 1.3;
@@ -143,19 +134,18 @@
   text-overflow: ellipsis;
 }
 
-.sp-card__code {
+.myplan-card__code {
   font-size: 10px;
   font-family: "SF Mono", "Fira Code", monospace;
-  color: #9ca3af;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   border-radius: 5px;
-  padding: 2px 6px;
+  padding: 2px 7px;
+  color: #9ca3af;
   align-self: flex-start;
-  margin-top: 2px;
 }
 
-.sp-card__right {
+.myplan-card__right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -163,135 +153,141 @@
   flex-shrink: 0;
 }
 
-.sp-card__chevron {
-  color: #9ca3af;
-  transition: transform 0.22s ease;
-}
-.sp-card__chevron--up { transform: rotate(180deg); }
-
 /* ── Status badge ── */
-.sp-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.myplan-badge {
   font-size: 11px;
   font-weight: 700;
-  border-radius: 20px;
+  border-radius: 999px;
   padding: 3px 9px;
   white-space: nowrap;
+  line-height: 1.4;
 }
 
-.sp-badge__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* ── Card body (expanded) ── */
-.sp-card__body {
-  border-top: 1px solid #f1f5f9;
-  padding: 0 16px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  animation: sp-slide-down 0.22s ease;
-}
-
-@keyframes sp-slide-down {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Detail sections ── */
-.sp-detail-section {
-  padding: 12px 0;
-  border-bottom: 1px solid #f3f4f6;
-}
-.sp-detail-section:last-child { border-bottom: none; }
-
-.sp-detail-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+/* ── Chevron ── */
+.myplan-chevron {
   color: #9ca3af;
-  margin: 0 0 8px;
-}
-
-/* ── Rows ── */
-.sp-rows {
-  display: flex;
-  flex-direction: column;
-}
-
-.sp-row {
+  transition: transform 0.25s ease, color 0.2s ease;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-bottom: 1px solid #f9fafb;
-  font-size: 13px;
-  color: #374151;
 }
-.sp-row:last-child { border-bottom: none; }
 
-.sp-row span { color: #6b7280; }
-.sp-row strong { font-weight: 600; color: #111827; }
+.myplan-chevron--open {
+  transform: rotate(180deg);
+  color: #375dfb;
+}
 
-.sp-row--total {
-  border-top: 1px dashed #e5e7eb;
+/* ── Expand / collapse panel (same pattern as ProductListPage) ── */
+.myplan-card__details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.myplan-card__details--open {
+  max-height: 700px;
+}
+
+.myplan-card__inner {
+  padding: 0 14px 14px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Detail rows — identical style to ProductListPage ── */
+.myplan-detail-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 12px;
+}
+
+.myplan-detail-row--last,
+.myplan-detail-row:last-child {
   border-bottom: none;
-  margin-top: 4px;
+}
+
+.myplan-detail-row--total {
+  border-top: 1px dashed #e5e7eb;
+  margin-top: 2px;
   padding-top: 10px;
 }
 
-.sp-blue   { color: #375dfb !important; }
-.sp-capitalize { text-transform: capitalize; }
-
-/* ── Address block ── */
-.sp-address-block {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
-  border-radius: 10px;
-  padding: 10px 12px;
-}
-.sp-address__name   { font-size: 13px; font-weight: 700; color: #111827; }
-.sp-address__mobile { font-size: 12px; color: #6b7280; }
-.sp-address__line   { font-size: 12px; color: #6b7280; line-height: 1.5; }
-
-/* ── Pill row ── */
-.sp-pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-  padding-top: 12px;
+.myplan-detail-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  flex-shrink: 0;
 }
 
-.sp-pill {
-  font-size: 10px;
-  font-weight: 600;
+.myplan-detail-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  text-align: right;
+}
+
+.myplan-detail-value em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.myplan-detail-value--blue  { color: #375dfb; }
+.myplan-detail-value--mono  {
   font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 11px;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  padding: 3px 8px;
-  color: #6b7280;
+  border-radius: 5px;
+  padding: 2px 7px;
+  color: #374151;
 }
+.myplan-detail-value--addr  {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.6;
+}
+.myplan-capitalize { text-transform: capitalize; }
 
-/* ── List of past cards ── */
-.sp-list {
+/* ── Loading skeletons ── */
+.myplan-loader {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+@keyframes myplan-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.myplan-skeleton {
+  height: 76px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e9edf2 50%, #f1f5f9 75%);
+  background-size: 800px 100%;
+  animation: myplan-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Error ── */
+.myplan-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
 /* ── Empty state ── */
-.sp-empty {
+.myplan-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -299,38 +295,27 @@
   padding: 40px 24px;
   background: #fff;
   border: 1.5px dashed #e5e7eb;
-  border-radius: 16px;
+  border-radius: 14px;
   text-align: center;
 }
 
-.sp-empty__icon {
-  width: 56px;
-  height: 56px;
-  background: #f3f4f6;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
-}
-
-.sp-empty__text {
+.myplan-empty__text {
+  margin: 0;
   font-size: 14px;
   font-weight: 700;
   color: #111827;
-  margin: 0;
 }
 
-.sp-empty__sub {
+.myplan-empty__sub {
+  margin: 0;
   font-size: 12px;
   color: #9ca3af;
-  max-width: 220px;
-  line-height: 1.5;
-  margin: 0;
+  max-width: 240px;
+  line-height: 1.6;
 }
 
-.sp-cta {
-  margin-top: 8px;
+.myplan-empty__btn {
+  margin-top: 6px;
   height: 40px;
   padding: 0 24px;
   border: none;
@@ -343,57 +328,13 @@
   font-family: inherit;
   transition: background 0.18s ease, transform 0.15s ease;
 }
-.sp-cta:hover { background: #2447d5; transform: translateY(-1px); }
-
-/* ── Skeleton loader ── */
-.sp-loader {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-@keyframes sp-shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-
-.sp-skeleton {
-  background: linear-gradient(90deg, #f1f5f9 25%, #e9edf2 50%, #f1f5f9 75%);
-  background-size: 800px 100%;
-  animation: sp-shimmer 1.4s ease-in-out infinite;
-  border-radius: 16px;
-}
-
-.sp-skeleton--card { height: 88px; }
-
-/* ── Error box ── */
-.sp-error-box {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-size: 13px;
-  color: #ef4444;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ── Hint text ── */
-.sp-hint {
-  text-align: center;
-  padding: 20px;
-  font-size: 12px;
-  color: #9ca3af;
-  line-height: 1.6;
-}
+.myplan-empty__btn:hover  { background: #2447d5; transform: translateY(-1px); }
+.myplan-empty__btn:active { background: #1a38c0; transform: translateY(0); }
 
 /* ── Tiny screens ── */
 @media (max-width: 380px) {
-  .sp-topbar    { padding: 12px 12px 8px; }
-  .sp-body      { padding: 12px 10px 24px; }
-  .sp-card__header { padding: 12px 14px; }
-  .sp-card__body   { padding: 0 14px 14px; }
-  .sp-card__model  { font-size: 13px; }
+  .myplan-body { padding: 12px 10px 90px; }
+  .myplan-card__row   { padding: 11px 12px; }
+  .myplan-card__inner { padding: 10px 12px 12px; }
+  .myplan-card__model { font-size: 13px; }
 }
