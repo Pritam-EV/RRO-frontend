@@ -139,3 +139,51 @@
   font-size: 0.75rem;
   color: #9ca3af;
 }
+
+.usage-bar-val {
+  font-size: 0.6rem;
+  color: #6b7280;
+  margin-bottom: 2px;
+  min-height: 14px;
+}
+
+.usage-log-list {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.usage-log-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.usage-log-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  min-width: 80px;
+}
+.usage-log-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: #f0f4ff;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.usage-log-bar {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.usage-log-val {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  min-width: 48px;
+  text-align: right;
+}
+.usage-summary-chip.over {
+  background: #fee2e2;
+  color: #dc2626;
+}

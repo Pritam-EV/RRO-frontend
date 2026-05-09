@@ -18,7 +18,7 @@ export default function OverviewPage() {
   const [deviceInfo, setDevice] = useState(null);
   const [litres, setLitres]     = useState(0);
   const [loading, setLoading]   = useState(true);
-
+  const [todayLitres, setTodayLitres] = useState(0);
   const greeting = () => {
     const h = new Date().getHours();
     if (h < 12) return "Good morning";
@@ -54,11 +54,16 @@ export default function OverviewPage() {
             try {
               const { data: ovRes } = await api.get(`/water/${devIdString}/overview`);
               setLitres(ovRes?.data?.totalLitres ?? 0);
+              setTodayLitres(ovRes?.data?.todayLitres ?? 0);
               // Also update device with fresh isOnline status
               if (ovRes?.data?.device) setDevice(ovRes.data.device);
             } catch (ovErr) {
-              console.warn("Overview fetch failed:", ovErr?.response?.data?.message);
-            }
+  console.warn("Overview fetch failed:", {
+    status:  ovErr?.response?.status,
+    message: ovErr?.response?.data?.message,
+    url:     `/water/${devIdString}/overview`,
+  });
+}
           }
         }
       } catch (e) {
@@ -112,10 +117,15 @@ export default function OverviewPage() {
                 <span className="ov-dstat-label">Days Left</span>
               </div>
               <div className="ov-dstat-divider" />
-              <div className="ov-dstat">
-                <span className="ov-dstat-val">{Number(litres).toFixed(1)} L</span>
-                <span className="ov-dstat-label">Consumed</span>
-              </div>
+<div className="ov-dstat">
+  <span className="ov-dstat-val">{Number(todayLitres).toFixed(1)} L</span>
+  <span className="ov-dstat-label">Today</span>
+</div>
+<div className="ov-dstat-divider" />
+<div className="ov-dstat">
+  <span className="ov-dstat-val">{Number(litres).toFixed(1)} L</span>
+  <span className="ov-dstat-label">Total Used</span>
+</div>
               <div className="ov-dstat-divider" />
               <div className="ov-dstat">
                 <span className="ov-dstat-val">
