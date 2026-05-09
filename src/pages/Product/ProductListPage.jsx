@@ -4,9 +4,10 @@ import api from "../../services/api";
 import "./ProductListPage.css";
 
 export default function ProductListPage() {
-  const [plans, setPlans] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [plans, setPlans]       = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState("");
+  const [expanded, setExpanded] = useState(null); // _id of open card
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +15,6 @@ export default function ProductListPage() {
       try {
         setLoading(true);
         setError("");
-
         const { data } = await api.get("/plans");
         setPlans(data?.data?.plans || []);
       } catch (err) {
@@ -23,97 +23,133 @@ export default function ProductListPage() {
         setLoading(false);
       }
     };
-
     fetchPlans();
   }, []);
 
-  const handleChoosePlan = (plan) => {
-    navigate(`/subscription/checkout/${plan.planId}`, { state: { plan } });
+  const toggleCard = (id) =>
+    setExpanded((prev) => (prev === id ? null : id));
+
+  const handleChoosePlan = (e, plan) => {
+    e.stopPropagation(); // don't collapse card when tapping button
+    navigate("/product/checkout", { state: { plan } });
   };
 
+  /* ── states ── */
+  if (loading)
+    return (
+      <div className="sp-page">
+        <div className="sp-feedback">
+          <span className="sp-spinner" />
+          <p>Loading plans…</p>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="sp-page">
+        <div className="sp-feedback sp-feedback--error"><p>{error}</p></div>
+      </div>
+    );
+
+  if (plans.length === 0)
+    return (
+      <div className="sp-page">
+        <div className="sp-feedback"><p>No plans available right now.</p></div>
+      </div>
+    );
+
   return (
-    <div className="shop-page">
-      <div className="shop-hero">
-        <div className="shop-hero__badge">RRO Subscription Store</div>
-        <h1>Choose a water plan that fits your home</h1>
-        <p>
-          Browse monthly RO plans with deposit, installation charges, and litre limits.
-        </p>
+    <div className="sp-page">
+
+      <div className="sp-header">
+        <h2>Subscription Plans</h2>
+        <span className="sp-count">{plans.length} plans</span>
       </div>
 
-      {loading && (
-        <div className="shop-state">
-          <div className="shop-loader"></div>
-          <p>Loading plans...</p>
-        </div>
-      )}
+      <div className="sp-list">
+        {plans.map((plan) => {
+          const open = expanded === plan._id;
+          return (
+            <article
+              key={plan._id}
+              className={`sp-card${open ? " sp-card--open" : ""}`}
+              onClick={() => toggleCard(plan._id)}
+            >
+              {/* ── Always visible row ── */}
+              <div className="sp-card__row">
 
-      {error && !loading && (
-        <div className="shop-state shop-state--error">
-          <p>{error}</p>
-        </div>
-      )}
+                <div className="sp-card__img-wrap">
+                  <img
+                    src={plan.image}
+                    alt={`${plan.brandName} ${plan.modelName}`}
+                    className="sp-card__img"
+                    loading="lazy"
+                  />
+                </div>
 
-      {!loading && !error && plans.length === 0 && (
-        <div className="shop-state">
-          <p>No plans available right now.</p>
-        </div>
-      )}
+                <div className="sp-card__info">
+                  <span className="sp-card__brand">{plan.brandName}</span>
+                  <h3 className="sp-card__model">{plan.modelName}</h3>
+                  {plan.comment && (
+                    <p className="sp-card__comment">{plan.comment}</p>
+                  )}
+                  <div className="sp-card__rate">
+                    <strong>₹{plan.perMonthAmount}</strong>
+                    <span>/month</span>
+                  </div>
+                </div>
 
-      {!loading && !error && plans.length > 0 && (
-        <div className="plan-grid">
-          {plans.map((plan) => (
-            <article className="plan-card" key={plan._id}>
-              <div className="plan-card__image-wrap">
-                <img
-                  src={plan.image}
-                  alt={`${plan.brandName} ${plan.modelName}`}
-                  className="plan-card__image"
-                />
-                <span className="plan-card__tag">{plan.planId}</span>
+                <div className={`sp-card__chevron${open ? " sp-card__chevron--open" : ""}`}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8"
+                      strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+
               </div>
 
-              <div className="plan-card__body">
-                <div className="plan-card__title-wrap">
-                  <p className="plan-card__brand">{plan.brandName}</p>
-                  <h3 className="plan-card__title">{plan.modelName}</h3>
+              {/* ── Expanded details ── */}
+              <div className={`sp-card__details${open ? " sp-card__details--open" : ""}`}>
+                <div className="sp-card__details-inner">
+
+                  <div className="sp-detail-row">
+                    <span className="sp-detail-label">Plan ID</span>
+                    <span className="sp-detail-value sp-detail-value--mono">{plan.planId}</span>
+                  </div>
+
+                  <div className="sp-detail-row">
+                    <span className="sp-detail-label">Deposit</span>
+                    <span className="sp-detail-value">₹{plan.deposit}</span>
+                  </div>
+
+                  <div className="sp-detail-row">
+                    <span className="sp-detail-label">Monthly Limit</span>
+                    <span className="sp-detail-value">{plan.monthlyLitreLimit} litres</span>
+                  </div>
+
+                  {plan.installationCharges > 0 && (
+                    <div className="sp-detail-row">
+                      <span className="sp-detail-label">Installation</span>
+                      <span className="sp-detail-value">₹{plan.installationCharges}</span>
+                    </div>
+                  )}
+
+                  <button
+                    className="sp-card__btn"
+                    onClick={(e) => handleChoosePlan(e, plan)}
+                  >
+                    Choose this Plan
+                  </button>
+
                 </div>
-
-                <p className="plan-card__comment">{plan.comment || "Advanced water purification plan"}</p>
-
-                <div className="plan-card__price-row">
-                  <div>
-                    <span className="plan-card__price">₹{plan.perMonthAmount}</span>
-                    <span className="plan-card__per">/month</span>
-                  </div>
-                </div>
-
-                <div className="plan-card__meta">
-                  <div className="plan-meta-box">
-                    <span className="label">Deposit</span>
-                    <strong>₹{plan.deposit}</strong>
-                  </div>
-                  <div className="plan-meta-box">
-                    <span className="label">Installation</span>
-                    <strong>₹{plan.installationCharges}</strong>
-                  </div>
-                  <div className="plan-meta-box">
-                    <span className="label">Monthly Limit</span>
-                    <strong>{plan.monthlyLitreLimit} L</strong>
-                  </div>
-                </div>
-
-                <button
-                  className="plan-card__btn"
-                  onClick={() => handleChoosePlan(plan)}
-                >
-                  Choose Plan
-                </button>
               </div>
+
             </article>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
+
     </div>
   );
 }

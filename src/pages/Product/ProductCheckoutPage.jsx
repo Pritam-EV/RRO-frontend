@@ -1,168 +1,342 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import "./ProductCheckoutPage.css";
-import waterImg from "../../assets/images/water1.jpg";
-import userImg from "../../assets/images/user.png";
-import Footer from "../../components/common/Footer";
 
-const ProductCheckoutPage = () => {
+const STEPS = ["Plan", "Address", "Payment", "Delivery"];
+
+const initialAddress = { fullName: "", mobile: "", address: "", pincode: "", city: "" };
+
+export default function ProductCheckoutPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const plan     = location.state?.plan;
 
-  const plan = location.state?.plan || {
-    name: "Bolt Copper Water Purifier",
-    price: 549,
-    deposit: 1499,
+  const [step, setStep]         = useState(0);
+  const [addr, setAddr]         = useState(initialAddress);
+  const [addrErrors, setAddrErrors] = useState({});
+  const [payment, setPayment]   = useState("");
+  const [slot, setSlot]         = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [confirmed, setConfirmed] = useState(null); // subscription response
+
+  if (!plan) {
+    return (
+      <div className="co-page">
+        <div className="co-empty">
+          <p>No plan selected.</p>
+          <button className="co-btn" onClick={() => navigate("/product")}>Browse Plans</button>
+        </div>
+      </div>
+    );
+  }
+
+  const firstAmount = (plan.perMonthAmount || 0) + (plan.deposit || 0) + (plan.installationCharges || 0);
+
+  const validateAddr = () => {
+    const e = {};
+    if (!addr.fullName.trim())               e.fullName = "Required";
+    if (!/^[6-9]\d{9}$/.test(addr.mobile))  e.mobile   = "Enter valid 10-digit mobile";
+    if (!addr.address.trim())                e.address  = "Required";
+    if (!/^\d{6}$/.test(addr.pincode))       e.pincode  = "Enter valid 6-digit pincode";
+    if (!addr.city.trim())                   e.city     = "Required";
+    setAddrErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const total = plan.price + plan.deposit;
-  const userName = localStorage.getItem("rro_user_name") || "Amit";
+  const handleConfirm = async () => {
+    setLoading(true);
+    setApiError("");
+    try {
+      const { data } = await api.post("/subscriptions/order", {
+        planId:          plan._id,
+        deliveryAddress: addr,
+        paymentMethod:   payment,
+        deliverySlot:    slot,
+      });
+      setConfirmed(data.data);
+    } catch (err) {
+      setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return (
-    <div className="app-wrapper">
-      <div className="premium-container">
+  const next = () => {
+    setApiError("");
+    if (step === 1 && !validateAddr()) return;
+    if (step === 2 && !payment)        return;
+    if (step === 3) { handleConfirm(); return; }
+    setStep((s) => s + 1);
+  };
 
-        {/* Header INSIDE BOX */}
-        <div className="header-box">
-          <span className="back" onClick={() => navigate(-1)}>←</span>
-          <h2>Order Summary</h2>
+  const goBack = () => {
+    setApiError("");
+    if (step === 0) navigate(-1);
+    else setStep((s) => s - 1);
+  };
 
-          {/* User Icon */}
-          <div className="profile">
-                   <img src={userImg} alt="profile" onClick={() => navigate('/profile-page')} />
-                 </div>
-        </div>
-
-        {/* Steps */}
-        <div className="steps">
-          {["Cart", "Address", "Payment", "KYC", "Delivery"].map((s, i) => {
-            const stepNumber = i + 1;
-            return (
-              <div className="step-wrapper" key={i}>
-                <div
-                  className={`step ${step === stepNumber ? "active" : ""} ${step > stepNumber ? "done" : ""}`}
-                >
-                  <div className="circle">{step > stepNumber ? "✓" : stepNumber}</div>
-                  <span>{s}</span>
-                </div>
-
-                {i < 4 && <div className={`step-line ${step > stepNumber ? "line-done" : ""}`} />}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Product Card */}
-        <div className="card">
-          <div className="product-row">
-            <img src={waterImg} alt="product" className="product-img" />
-            <div>
-              <h4>{plan.name}</h4>
-              <p>9999 ltrs/month</p>
+  /* ── Success screen ── */
+  if (confirmed) {
+    return (
+      <div className="co-page">
+        <div className="co-success">
+          <div className="co-success__icon">✓</div>
+          <h2>Order Placed!</h2>
+          <p>
+            Your <strong>{confirmed.plan?.brandName} {confirmed.plan?.modelName}</strong> subscription
+            is confirmed.
+          </p>
+          <div className="co-success__meta">
+            <div className="co-row">
+              <span>Order ID</span>
+              <span className="co-mono">{confirmed.subscriptionCode}</span>
+            </div>
+            <div className="co-row">
+              <span>Delivery slot</span>
+              <span>{confirmed.deliverySlot}</span>
+            </div>
+            <div className="co-row co-row--total">
+              <span>Due on delivery</span>
+              <strong>₹{confirmed.firstPayment}</strong>
             </div>
           </div>
-
-          <div className="divider" />
-
-          <div className="price-row">
-            <span>Subscription</span>
-            <span>₹{plan.price}/month</span>
-          </div>
-          <div className="price-row">
-            <span>Deposit</span>
-            <span>₹{plan.deposit}</span>
-          </div>
-        </div>
-
-        {/* Order Summary INSIDE CARD */}
-        <div className="card">
-          <h4>Order Summary</h4>
-
-          <div className="price-row">
-            <span>Total Deposit</span>
-            <span>₹{plan.deposit}</span>
-          </div>
-          <div className="price-row">
-            <span>Subscription</span>
-            <span>₹{plan.price}</span>
-          </div>
-          <div className="price-row">
-            <span>Delivery</span>
-            <span>₹0</span>
-          </div>
-
-          <div className="divider" />
-
-          <div className="price-row total">
-            <span>To Pay</span>
-            <span>₹{total}</span>
-          </div>
-        </div>
-
-        {/* STEP FLOW */}
-        {step === 1 && (
-          <button className="checkout-btn" onClick={() => setStep(2)}>
-            Add Address ₹ {total}
+          <p className="co-success__note">
+            Our team will contact you to confirm installation. Payment is collected at delivery.
+          </p>
+          <button className="co-btn" onClick={() => navigate("/dashboard")}>
+            Go to Dashboard
           </button>
-        )}
-        {step === 2 && (
-          <div className="card">
-            <h4>Address Details</h4>
-            <input placeholder="Full Name" />
-            <input placeholder="Mobile Number" />
-            <textarea placeholder="Full Address" />
-            <input placeholder="Pincode" />
-            <input placeholder="City" />
-            <button className="checkout-btn" onClick={() => setStep(3)}>
-              Continue to Payment
-            </button>
-          </div>
-        )}
-        {step === 3 && (
-          <div className="card">
-            <h4>Payment</h4>
-            <div className="payment-option">💳 Card</div>
-            <div className="payment-option">📱 UPI</div>
-            <div className="payment-option">💵 COD</div>
-            <button className="checkout-btn" onClick={() => setStep(4)}>
-              Continue to KYC
-            </button>
-          </div>
-        )}
-        {step === 4 && (
-          <div className="card">
-            <h4>KYC</h4>
-            <input placeholder="Aadhar Number" />
-            <input placeholder="PAN Number" />
-            <label className="upload-box">
-              <input type="file" hidden />
-              <div className="upload-content">
-                Upload ID Proof
-                <span>Tap to upload</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="co-page">
+
+      {/* ── Top bar ── */}
+      <div className="co-topbar">
+        <button className="co-back" onClick={goBack} aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12.5 15l-5-5 5-5" stroke="currentColor" strokeWidth="1.8"
+              strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        <span className="co-topbar__title">Checkout</span>
+        <div style={{ width: 32 }} />
+      </div>
+
+      {/* ── Stepper ── */}
+      <div className="co-stepper" role="list">
+        {STEPS.map((label, i) => (
+          <React.Fragment key={label}>
+            <div
+              className={`co-step ${i === step ? "co-step--active" : ""} ${i < step ? "co-step--done" : ""}`}
+              role="listitem"
+            >
+              <div className="co-step__dot">
+                {i < step
+                  ? <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.6"
+                        strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  : <span>{i + 1}</span>
+                }
               </div>
-            </label>
-            <button className="checkout-btn" onClick={() => setStep(5)}>
-              Continue
-            </button>
-          </div>
+              <span className="co-step__label">{label}</span>
+            </div>
+            {i < STEPS.length - 1 && (
+              <div className={`co-step__line ${i < step ? "co-step__line--done" : ""}`} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div className="co-body">
+
+        {/* ── STEP 0: Plan summary ── */}
+        {step === 0 && (
+          <>
+            <div className="co-plan-card">
+              <div className="co-plan-card__img-wrap">
+                <img src={plan.image} alt={`${plan.brandName} ${plan.modelName}`} className="co-plan-card__img" />
+              </div>
+              <div className="co-plan-card__info">
+                <span className="co-plan-card__brand">{plan.brandName}</span>
+                <h3 className="co-plan-card__model">{plan.modelName}</h3>
+                {plan.comment && <p className="co-plan-card__comment">{plan.comment}</p>}
+                <span className="co-plan-card__id">{plan.planId}</span>
+              </div>
+            </div>
+
+            <div className="co-section">
+              <h4 className="co-section__title">Price Breakdown</h4>
+              <div className="co-rows">
+                <div className="co-row">
+                  <span>Monthly subscription</span>
+                  <span>₹{plan.perMonthAmount}<em>/mo</em></span>
+                </div>
+                <div className="co-row">
+                  <span>Refundable deposit</span>
+                  <span>₹{plan.deposit}</span>
+                </div>
+                {plan.installationCharges > 0 && (
+                  <div className="co-row">
+                    <span>Installation (one-time)</span>
+                    <span>₹{plan.installationCharges}</span>
+                  </div>
+                )}
+                <div className="co-row co-row--free">
+                  <span>Delivery</span>
+                  <span className="co-free">FREE</span>
+                </div>
+              </div>
+              <div className="co-total">
+                <span>Due on delivery</span>
+                <strong>₹{firstAmount}</strong>
+              </div>
+              <p className="co-note">From month 2 onwards, only ₹{plan.perMonthAmount}/month is charged.</p>
+            </div>
+          </>
         )}
-        {step === 5 && (
-          <div className="card">
-            <h4>Delivery</h4>
-            <select>
-              <option>Tomorrow 9am - 1pm</option>
-              <option>Tomorrow 2pm - 6pm</option>
-            </select>
-            <button className="checkout-btn">Confirm Order 🚀</button>
+
+        {/* ── STEP 1: Address ── */}
+        {step === 1 && (
+          <div className="co-section">
+            <h4 className="co-section__title">Delivery Address</h4>
+            <div className="co-form">
+              <div className="co-field">
+                <label>Full Name</label>
+                <input type="text" placeholder="e.g. Roshan Patil"
+                  value={addr.fullName}
+                  onChange={(e) => setAddr({ ...addr, fullName: e.target.value })}
+                  className={addrErrors.fullName ? "co-input--error" : ""}/>
+                {addrErrors.fullName && <span className="co-error">{addrErrors.fullName}</span>}
+              </div>
+              <div className="co-field">
+                <label>Mobile Number</label>
+                <input type="tel" placeholder="10-digit number" maxLength={10}
+                  value={addr.mobile}
+                  onChange={(e) => setAddr({ ...addr, mobile: e.target.value.replace(/\D/g, "") })}
+                  className={addrErrors.mobile ? "co-input--error" : ""}/>
+                {addrErrors.mobile && <span className="co-error">{addrErrors.mobile}</span>}
+              </div>
+              <div className="co-field">
+                <label>Full Address</label>
+                <textarea placeholder="House no., street, locality…" rows={3}
+                  value={addr.address}
+                  onChange={(e) => setAddr({ ...addr, address: e.target.value })}
+                  className={addrErrors.address ? "co-input--error" : ""}/>
+                {addrErrors.address && <span className="co-error">{addrErrors.address}</span>}
+              </div>
+              <div className="co-field-row">
+                <div className="co-field">
+                  <label>Pincode</label>
+                  <input type="text" placeholder="6 digits" maxLength={6}
+                    value={addr.pincode}
+                    onChange={(e) => setAddr({ ...addr, pincode: e.target.value.replace(/\D/g, "") })}
+                    className={addrErrors.pincode ? "co-input--error" : ""}/>
+                  {addrErrors.pincode && <span className="co-error">{addrErrors.pincode}</span>}
+                </div>
+                <div className="co-field">
+                  <label>City</label>
+                  <input type="text" placeholder="e.g. Pune"
+                    value={addr.city}
+                    onChange={(e) => setAddr({ ...addr, city: e.target.value })}
+                    className={addrErrors.city ? "co-input--error" : ""}/>
+                  {addrErrors.city && <span className="co-error">{addrErrors.city}</span>}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
-        <Footer />
+        {/* ── STEP 2: Payment ── */}
+        {step === 2 && (
+          <div className="co-section">
+            <h4 className="co-section__title">Payment Method</h4>
+            <p className="co-section__sub">Payment is collected at delivery — nothing charged now.</p>
+            <div className="co-payment-opts">
+              {[
+                { id: "upi",  icon: "📱", label: "UPI",  sub: "PhonePe, GPay, Paytm" },
+                { id: "card", icon: "💳", label: "Card", sub: "Debit or Credit card" },
+                { id: "cod",  icon: "💵", label: "Cash on Delivery", sub: "Pay when device arrives" },
+              ].map((opt) => (
+                <div key={opt.id}
+                  className={`co-payment-opt ${payment === opt.id ? "co-payment-opt--active" : ""}`}
+                  onClick={() => setPayment(opt.id)}
+                  role="radio" aria-checked={payment === opt.id} tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && setPayment(opt.id)}>
+                  <span className="co-payment-opt__icon">{opt.icon}</span>
+                  <div className="co-payment-opt__text">
+                    <strong>{opt.label}</strong>
+                    <span>{opt.sub}</span>
+                  </div>
+                  <div className={`co-radio ${payment === opt.id ? "co-radio--on" : ""}`} />
+                </div>
+              ))}
+            </div>
+            {!payment && <p className="co-error" style={{ marginTop: 8 }}>Please select a payment method</p>}
+          </div>
+        )}
+
+        {/* ── STEP 3: Delivery + final summary ── */}
+        {step === 3 && (
+          <div className="co-section">
+            <h4 className="co-section__title">Choose Delivery Slot</h4>
+            <p className="co-section__sub">Pick a time that works for you.</p>
+            <div className="co-slots">
+              {[
+                { id: "tmrw-am", label: "Tomorrow",           time: "9:00 AM – 1:00 PM" },
+                { id: "tmrw-pm", label: "Tomorrow",           time: "2:00 PM – 6:00 PM" },
+                { id: "day2-am", label: "Day after tomorrow", time: "9:00 AM – 1:00 PM" },
+                { id: "day2-pm", label: "Day after tomorrow", time: "2:00 PM – 6:00 PM" },
+              ].map((s) => (
+                <div key={s.id}
+                  className={`co-slot ${slot === s.id ? "co-slot--active" : ""}`}
+                  onClick={() => setSlot(s.id)}
+                  role="radio" aria-checked={slot === s.id} tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && setSlot(s.id)}>
+                  <div>
+                    <strong>{s.label}</strong>
+                    <span>{s.time}</span>
+                  </div>
+                  <div className={`co-radio ${slot === s.id ? "co-radio--on" : ""}`} />
+                </div>
+              ))}
+            </div>
+
+            {/* Order summary */}
+            <div className="co-confirm-summary">
+              <div className="co-row"><span>Plan</span><span>{plan.brandName} {plan.modelName}</span></div>
+              <div className="co-row"><span>Payment</span><span style={{ textTransform: "capitalize" }}>{payment}</span></div>
+              <div className="co-row"><span>Address</span><span>{addr.city}, {addr.pincode}</span></div>
+              <div className="co-row co-row--total"><span>Due on delivery</span><strong>₹{firstAmount}</strong></div>
+            </div>
+
+            {apiError && <p className="co-error" style={{ marginTop: 10 }}>{apiError}</p>}
+          </div>
+        )}
 
       </div>
+
+      {/* ── Sticky CTA ── */}
+      <div className="co-footer">
+        <button className="co-btn" onClick={next}
+          disabled={(step === 3 && !slot) || loading}>
+          {loading ? "Placing order…" : (
+            <>
+              {step === 0 && "Continue to Address"}
+              {step === 1 && "Save Address"}
+              {step === 2 && "Continue to Delivery"}
+              {step === 3 && `Confirm Order · ₹${firstAmount}`}
+            </>
+          )}
+        </button>
+      </div>
+
     </div>
   );
-};
-
-export default ProductCheckoutPage;
+}
