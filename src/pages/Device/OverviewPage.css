@@ -232,3 +232,39 @@
   font-weight: 700;
   color: var(--d-text);
 }
+
+/* ── Device Summary Card ── */
+.ov-device-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+.ov-device-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ov-device-icon { font-size: 2rem; }
+.ov-device-id   { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
+.ov-device-status { font-size: 0.75rem; margin-top: 2px; }
+.ov-device-status.online  { color: #22c55e; }
+.ov-device-status.offline { color: #9ca3af; }
+.ov-ro-arrow { margin-left: auto; color: #9ca3af; }
+
+.ov-device-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #f8faff;
+  border-radius: 12px;
+  padding: 14px 8px;
+}
+.ov-dstat         { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.ov-dstat-val     { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
+.ov-dstat-label   { font-size: 0.7rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
+.ov-dstat-divider { width: 1px; height: 36px; background: #e5e7eb; }
+

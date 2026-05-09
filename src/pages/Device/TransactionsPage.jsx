@@ -146,8 +146,8 @@ export default function TransactionsPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await api.get("/payments/my");
-        setTxns(data?.data?.payments || data?.data?.transactions || []);
+        const { data } = await api.get("/payments/history");
+        setTxns(data?.data?.payments || []); 
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load transactions.");
       } finally {

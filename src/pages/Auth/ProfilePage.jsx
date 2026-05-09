@@ -19,11 +19,11 @@ export default function ProfilePage() {
   };
 
   const items = [
-    { icon: "✏️", label: "Edit Profile", action: () => navigate("/profile") },
+    
     { icon: "📋", label: "My Subscriptions", action: () => navigate("/subscription") },
-    { icon: "🧾", label: "Payment History", action: () => navigate("/dashboard/payments") },
+    { icon: "🧾", label: "Transactions",     action: () => navigate("/transactions") },
     { icon: "💰", label: "Refer & Earn", action: () => navigate("/refer") },
-    { icon: "📱", label: "My Devices", action: () => navigate("/device/connect") },
+    { icon: "📱", label: "My Devices", action: () => navigate("/dashboard") },
   ];
 
   return (
