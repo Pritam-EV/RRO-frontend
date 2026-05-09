@@ -1,5 +1,142 @@
 /* ─── My Plans Page ─────────────────────────────────────────── */
 
+/* ── Live border accent ── */
+.sp-card--live {
+  border-color: rgba(55, 93, 251, 0.22);
+  box-shadow: 0 2px 12px rgba(55, 93, 251, 0.07);
+}
+
+/* ── Subscription collapsed row (button reset) ── */
+.sp-card__row--sub {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+}
+
+/* ── Top row: brand + pulse dot ── */
+.sp-card__top-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Subscription code chip ── */
+.sp-card__code {
+  font-size: 10px;
+  font-family: "SF Mono", "Fira Code", monospace;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 5px;
+  padding: 2px 7px;
+  color: #9ca3af;
+  align-self: flex-start;
+  letter-spacing: 0.04em;
+}
+
+/* ── Right meta column (badge + chevron) ── */
+.sp-card__meta-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Status badge ── */
+.sp-badge {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+/* ── Pulsing green dot ── */
+.sp-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  flex-shrink: 0;
+  animation: sp-pulse-anim 2s ease-in-out infinite;
+}
+@keyframes sp-pulse-anim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
+/* ── Section headers ── */
+.sp-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.sp-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+/* ── Total row ── */
+.sp-detail-row--total {
+  border-top: 1px dashed #e5e7eb;
+  margin-top: 2px;
+  padding-top: 10px;
+}
+.sp-detail-value--blue { color: #375dfb; }
+
+/* ── Address value ── */
+.sp-detail-row--addr { align-items: flex-start; }
+.sp-detail-value--addr {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.6;
+  text-align: right;
+}
+
+/* ── Misc ── */
+.sp-capitalize { text-transform: capitalize; }
+.sp-detail-value em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+/* ── Empty state ── */
+.sp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 24px;
+  background: #fff;
+  border: 1.5px dashed #e5e7eb;
+  border-radius: 14px;
+  text-align: center;
+}
+.sp-empty__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+.sp-empty__sub {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+  max-width: 240px;
+  line-height: 1.6;
+}
 .myplan-page {
   display: flex;
   flex-direction: column;

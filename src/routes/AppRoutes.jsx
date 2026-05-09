@@ -5,9 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import SplashPage from "../pages/Splash/SplashPage.jsx";
 import LoginPage from "../pages/Auth/LoginPage.jsx";
 import OtpPage from "../pages/Auth/OtpPage.jsx";
-import ProfileFormPage from "../pages/Auth/ProfileFormPage.jsx";
 import ProfilePage from "../pages/Auth/ProfilePage.jsx";
-import ChoicePage from "../pages/Auth/ChoicePage.jsx";
 import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage.jsx";
 import SignupPage from "../pages/Auth/SignupPage.jsx";
 import RegisterPage from "../pages/Auth/RegisterPage.jsx";
@@ -16,7 +14,7 @@ import OverviewPage from "../pages/Device/OverviewPage.jsx";
 import TopupPage from "../pages/Device/TopupPage.jsx";
 import UsagePage from "../pages/Device/UsagePage.jsx";
 import PaymentsPage from "../pages/Device/PaymentsPage.jsx";
-import WalletPage from "../pages/Device/WalletPage.jsx";
+import TransactionsPage from "../pages/Device/TransactionsPage.jsx";
 
 
 import ProductListPage from "../pages/Product/ProductListPage.jsx";
@@ -41,8 +39,6 @@ const AppRoutes = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/otp" element={<OtpPage />} />
-        <Route path="/profile" element={<ProfileFormPage />} />
-        <Route path="/choice" element={<ChoicePage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Route>
 
@@ -54,8 +50,7 @@ const AppRoutes = () => {
           <Route path="/dashboard/topup" element={<TopupPage />} />
           <Route path="/dashboard/usage" element={<UsagePage />} />
           <Route path="/dashboard/payments" element={<PaymentsPage />} />
-          <Route path="/dashboard/wallet" element={<WalletPage />} />
-          <Route path="/profile-page" element={<ProfilePage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/refer" element={<ReferPage />} />
           <Route path="/product" element={<ProductListPage />} />
           <Route path="/product/checkout" element={<ProductCheckoutPage />} />

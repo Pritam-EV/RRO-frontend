@@ -53,12 +53,18 @@ export default function DashboardLayout() {
           <span>Shop</span>
         </NavLink>
 
-        <NavLink to="/dashboard/wallet" className={({ isActive }) => "dl-nav-item" + (isActive ? " active" : "")}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-          </svg>
-          <span>Wallet</span>
-        </NavLink>
+      <NavLink to="/transactions" className={({ isActive }) => "dl-nav-item" + (isActive ? " active" : "")}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        <span>History</span>
+      </NavLink>
       </nav>
     </div>
   );
