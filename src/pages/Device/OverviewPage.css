@@ -1,57 +1,294 @@
+/* ── OverviewPage ── */
+
 .ov-page {
-  padding: 1.5rem 1.25rem 1rem;
+  padding: 1.375rem 1.25rem 5rem;
   max-width: 480px;
   margin: 0 auto;
 }
 
 /* ── Greeting ── */
 .ov-greet {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.375rem;
+  line-height: 1;
 }
 
-.ov-greet-sub {
+.ov-greet-time {
+  font-family: var(--font);
   font-size: 0.8125rem;
-  color: var(--d-muted);
   font-weight: 400;
-  margin-bottom: 0.125rem;
+  color: var(--d-muted);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.01em;
 }
 
 .ov-greet-name {
-  font-size: 1.5rem;
+  font-family: var(--font);
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--d-text);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+  margin: 0;
 }
 
-/* ── Empty state ── */
+/* ── Skeleton ── */
+.ov-skeleton-wrap { display: flex; flex-direction: column; gap: 0.75rem; }
+.ov-sk {
+  background: var(--d-border);
+  border-radius: 16px;
+  animation: ov-pulse 1.5s ease-in-out infinite;
+}
+@keyframes ov-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.ov-sk-hero  { height: 280px; }
+.ov-sk-alert { height: 44px; border-radius: 10px; }
+
+/* ══════════════════════════════════════
+   MAIN CARD
+══════════════════════════════════════ */
+.ov-main-card {
+  background: var(--d-surface);
+  border: 1px solid var(--d-border);
+  border-radius: 20px;
+  box-shadow: var(--d-shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  margin-bottom: 0.75rem;
+}
+
+.ov-main-card:active {
+  transform: scale(0.99);
+  box-shadow: 0 1px 6px rgba(79,110,247,0.08);
+}
+
+/* Top accent strip */
+.ov-card-strip {
+  height: 3px;
+  background: var(--d-grad);
+}
+
+/* ── Device row ── */
+.ov-card-device-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.125rem 0.75rem;
+}
+
+.ov-card-device-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ov-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ov-dot.online  {
+  background: #10b981;
+  box-shadow: 0 0 0 2.5px rgba(16,185,129,0.18);
+}
+.ov-dot.offline {
+  background: var(--d-faint);
+}
+
+.ov-card-devid {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--d-text);
+  letter-spacing: 0.04em;
+}
+
+.ov-chip {
+  font-size: 0.675rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  letter-spacing: 0.01em;
+}
+.chip-on  { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+.chip-off { background: rgba(148,163,184,0.1); color: var(--d-faint); border: 1px solid rgba(148,163,184,0.18); }
+
+/* ── Divider ── */
+.ov-card-divider {
+  height: 1px;
+  background: var(--d-border);
+  margin: 0 1.125rem;
+}
+
+/* ── Usage numbers ── */
+.ov-card-usage-row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.125rem 0.625rem;
+}
+
+.ov-card-metric { flex: 1; }
+
+.ov-card-metric-divider {
+  width: 1px;
+  height: 44px;
+  background: var(--d-border);
+  margin: 0 0.75rem;
+  flex-shrink: 0;
+}
+
+.ov-card-metric-label {
+  font-size: 0.675rem;
+  font-weight: 500;
+  color: var(--d-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.ov-card-metric-val {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--d-text);
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+}
+
+.ov-card-metric-unit {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--d-muted);
+  letter-spacing: 0;
+}
+
+/* ── Progress bar ── */
+.ov-progress-wrap {
+  height: 5px;
+  background: rgba(79,110,247,0.1);
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 0.5rem 1.125rem 0.3rem;
+}
+
+.ov-progress-fill {
+  height: 100%;
+  background: var(--d-grad);
+  border-radius: 99px;
+  transition: width 0.7s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.ov-progress-hint {
+  font-size: 0.675rem;
+  color: var(--d-muted);
+  padding: 0 1.125rem 0.75rem;
+}
+
+/* ── Subscription meta row ── */
+.ov-card-meta-row {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.125rem;
+}
+
+.ov-card-meta-item {
+  flex: 1;
+  text-align: center;
+}
+
+.ov-card-meta-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--d-border);
+  flex-shrink: 0;
+}
+
+.ov-card-meta-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--d-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.ov-card-meta-val {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--d-text);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+/* Days left urgency */
+.ov-urgent { color: #ef4444 !important; }
+.ov-warn   { color: #f59e0b !important; }
+.ov-safe   { color: #10b981 !important; }
+
+/* ── Tap hint ── */
+.ov-card-tap-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 0.5rem 1.125rem 0.875rem;
+  color: var(--d-blue);
+  border-top: 1px solid var(--d-border);
+}
+
+.ov-card-tap-text {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--d-blue);
+}
+
+/* ══════════════════════════════════════
+   RENEWAL ALERT
+══════════════════════════════════════ */
+.ov-renewal-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(239,68,68,0.05);
+  border: 1px solid rgba(239,68,68,0.16);
+  border-radius: 12px;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.7875rem;
+  color: #dc2626;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════
+   EMPTY / PENDING STATES
+══════════════════════════════════════ */
 .ov-empty {
   background: var(--d-surface);
-  border-radius: 20px;
   border: 1px solid var(--d-border);
+  border-radius: 20px;
   padding: 2.5rem 1.5rem;
   text-align: center;
   box-shadow: var(--d-shadow);
-  position: relative;
-  overflow: hidden;
 }
 
-.ov-empty::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--d-grad);
-  border-radius: 20px 20px 0 0;
+.ov-empty-icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: rgba(79,110,247,0.07);
+  border: 1px solid rgba(79,110,247,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.125rem;
+  color: var(--d-blue);
 }
 
-.ov-empty-icon {
-  font-size: 2.75rem;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 4px 8px rgba(79,110,247,0.15));
+.ov-empty-icon-wrap.pending {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.2);
+  color: #f59e0b;
 }
 
 .ov-empty-title {
-  font-size: 1.1875rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--d-text);
   margin-bottom: 0.5rem;
@@ -62,209 +299,58 @@
   color: var(--d-muted);
   line-height: 1.6;
   max-width: 280px;
-  margin: 0 auto 1.75rem;
+  margin: 0 auto 1.375rem;
+}
+
+.ov-status-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 4px 14px;
+  border-radius: 99px;
+  background: rgba(245,158,11,0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.2);
 }
 
 .ov-empty-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 
-/* ── Buttons ── */
 .ov-btn-primary {
   width: 100%;
   padding: 0.8125rem 1rem;
   background: var(--d-grad);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-family: var(--font);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
   min-height: 48px;
-  box-shadow: 0 4px 14px rgba(139,92,246,0.28);
-  transition: opacity 180ms ease, transform 150ms ease;
+  box-shadow: 0 4px 14px rgba(139,92,246,0.25);
+  transition: opacity 160ms ease, transform 140ms ease;
 }
 
-.ov-btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
+.ov-btn-primary:active { opacity: 0.88; transform: scale(0.98); }
 
 .ov-btn-ghost {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: rgba(79,110,247,0.06);
+  background: rgba(79,110,247,0.05);
   color: var(--d-blue);
   border: 1.5px solid rgba(79,110,247,0.18);
-  border-radius: 10px;
-  font-family: var(--font);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  transition: all 180ms ease;
-}
-
-.ov-btn-ghost:hover {
-  background: rgba(79,110,247,0.1);
-  border-color: rgba(79,110,247,0.32);
-}
-
-.ov-btn-outline {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  color: var(--d-blue);
-  border: 1.5px dashed rgba(79,110,247,0.3);
-  border-radius: 10px;
-  font-family: var(--font);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  margin-top: 0.75rem;
-  transition: all 180ms ease;
-}
-
-.ov-btn-outline:hover {
-  background: rgba(79,110,247,0.04);
-  border-color: rgba(79,110,247,0.5);
-}
-
-/* ── RO card list ── */
-.ov-ro-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.ov-ro-card {
-  background: var(--d-surface);
-  border: 1px solid var(--d-border);
-  border-radius: 14px;
-  padding: 1rem 1.125rem;
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  cursor: pointer;
-  box-shadow: var(--d-shadow);
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.ov-ro-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(79,110,247,0.12);
-}
-
-.ov-ro-icon { font-size: 1.625rem; }
-
-.ov-ro-info { flex: 1; }
-
-.ov-ro-name {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--d-text);
-  margin-bottom: 0.125rem;
-}
-
-.ov-ro-status {
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.ov-ro-status.online { color: #10B981; }
-.ov-ro-status.offline { color: var(--d-faint); }
-
-.ov-ro-arrow { color: var(--d-faint); }
-
-/* ── Quick stats ── */
-.ov-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.ov-stat-card {
-  background: var(--d-surface);
-  border: 1px solid var(--d-border);
-  border-radius: 14px;
-  padding: 1rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: pointer;
-  box-shadow: var(--d-shadow);
-  transition: transform 150ms ease;
-  text-align: center;
-}
-
-.ov-stat-card:hover { transform: translateY(-2px); }
-
-.ov-stat-icon { font-size: 1.375rem; }
-
-.ov-stat-label {
-  font-size: 0.675rem;
-  color: var(--d-muted);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
-.ov-stat-val {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--d-text);
-}
-
-/* ── Device Summary Card ── */
-.ov-device-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 16px;
-  margin: 16px 0;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  cursor: pointer;
-}
-.ov-device-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.ov-device-icon { font-size: 2rem; }
-.ov-device-id   { font-weight: 700; font-size: 1rem; color: #1a1a2e; }
-.ov-device-status { font-size: 0.75rem; margin-top: 2px; }
-.ov-device-status.online  { color: #22c55e; }
-.ov-device-status.offline { color: #9ca3af; }
-.ov-ro-arrow { margin-left: auto; color: #9ca3af; }
-
-.ov-device-stats {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: #f8faff;
   border-radius: 12px;
-  padding: 14px 8px;
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background 160ms ease;
 }
-.ov-dstat         { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.ov-dstat-val     { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
-.ov-dstat-label   { font-size: 0.7rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
-.ov-dstat-divider { width: 1px; height: 36px; background: #e5e7eb; }
 
+.ov-btn-ghost:active { background: rgba(79,110,247,0.1); }

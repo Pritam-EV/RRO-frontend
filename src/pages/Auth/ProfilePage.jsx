@@ -20,10 +20,10 @@ export default function ProfilePage() {
 
   const items = [
     
-    { icon: "📋", label: "My Subscriptions", action: () => navigate("/subscription") },
-    { icon: "🧾", label: "Transactions",     action: () => navigate("/transactions") },
-    { icon: "💰", label: "Refer & Earn", action: () => navigate("/refer") },
-    { icon: "📱", label: "My Devices", action: () => navigate("/dashboard") },
+    { label: "My Subscriptions", action: () => navigate("/subscription") },
+    { label: "Transactions",     action: () => navigate("/transactions") },
+    // { label: "Refer & Earn", action: () => navigate("/refer") },
+    { label: "My Devices", action: () => navigate("/dashboard") },
   ];
 
   return (
@@ -40,7 +40,7 @@ export default function ProfilePage() {
         <div className="pp-avatar">{initials}</div>
         <h2 className="pp-name">{user?.name || "User"}</h2>
         <p className="pp-mobile">+91 {user?.mobile}</p>
-        {user?.city && <p className="pp-city">📍 {user.city}</p>}
+        {user?.city && <p className="pp-city"> {user.city}</p>}
       </div>
 
       {/* Menu list */}

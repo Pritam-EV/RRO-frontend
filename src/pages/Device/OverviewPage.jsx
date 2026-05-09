@@ -1,3 +1,4 @@
+// src/pages/Device/OverviewPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -10,60 +11,45 @@ function daysLeft(endDate) {
   return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
 }
 
-export default function OverviewPage() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
 
-  const [sub, setSub]           = useState(null);
-  const [deviceInfo, setDevice] = useState(null);
-  const [litres, setLitres]     = useState(0);
-  const [loading, setLoading]   = useState(true);
+export default function OverviewPage() {
+  const { user }   = useAuth();
+  const navigate   = useNavigate();
+
+  const [sub,         setSub]         = useState(null);
+  const [deviceInfo,  setDevice]      = useState(null);
+  const [litres,      setLitres]      = useState(0);
   const [todayLitres, setTodayLitres] = useState(0);
-  const greeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return "Good morning";
-    if (h < 17) return "Good afternoon";
-    return "Good evening";
-  };
+  const [loading,     setLoading]     = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-
-        // Step 1: Get subscription (deviceId is now populated from BE)
         const { data: subRes } = await api.get("/subscriptions/my");
         const subscription = subRes?.data?.subscription;
         setSub(subscription);
 
-        // Step 2: If active + device is populated, extract deviceId string
         if (subscription?.status === "active" && subscription?.deviceId) {
-          // After populate, deviceId is an object: { deviceId: "RRO001", ... }
-          // Before populate (or if populate missed), it's just an ObjectId string
-          const rawDevice = subscription.deviceId;
+          const rawDevice   = subscription.deviceId;
           const devIdString =
             typeof rawDevice === "object" && rawDevice?.deviceId
-              ? rawDevice.deviceId          // populated ✅
-              : null;                        // not populated — skip overview call
+              ? rawDevice.deviceId : null;
 
           if (devIdString) {
-            // Set device info from the populated object directly
             setDevice(rawDevice);
-
-            // Step 3: Fetch overview for totalLitres
             try {
               const { data: ovRes } = await api.get(`/water/${devIdString}/overview`);
               setLitres(ovRes?.data?.totalLitres ?? 0);
               setTodayLitres(ovRes?.data?.todayLitres ?? 0);
-              // Also update device with fresh isOnline status
               if (ovRes?.data?.device) setDevice(ovRes.data.device);
-            } catch (ovErr) {
-  console.warn("Overview fetch failed:", {
-    status:  ovErr?.response?.status,
-    message: ovErr?.response?.data?.message,
-    url:     `/water/${devIdString}/overview`,
-  });
-}
+            } catch (_) {}
           }
         }
       } catch (e) {
@@ -78,102 +64,172 @@ export default function OverviewPage() {
   const isPending = sub && !isActive;
   const days      = daysLeft(sub?.endDate);
   const devIdStr  = deviceInfo?.deviceId || "—";
+  const isOnline  = deviceInfo?.isOnline ?? false;
+  const firstName = user?.name?.split(" ")[0] || "there";
+
+  const daysClass =
+    days === null ? "" : days <= 5 ? "ov-urgent" : days <= 15 ? "ov-warn" : "ov-safe";
+
+  const renewLabel = sub?.endDate
+    ? new Date(sub.endDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+    : "—";
 
   return (
     <div className="ov-page">
 
-      {/* Greeting */}
+      {/* ── Greeting ── */}
       <div className="ov-greet">
-        <p className="ov-greet-sub">{greeting()},</p>
-        <h1 className="ov-greet-name">{user?.name?.split(" ")[0] || "User"} 👋</h1>
+        <p className="ov-greet-time">{greeting()},</p>
+        <h1 className="ov-greet-name">{firstName}</h1>
       </div>
 
+      {/* ── Loading skeleton ── */}
       {loading ? (
-        <div className="ov-empty">
-          <p style={{ color: "#888", marginTop: 32 }}>Loading your dashboard…</p>
+        <div className="ov-skeleton-wrap">
+          <div className="ov-sk ov-sk-hero" />
+          <div className="ov-sk ov-sk-alert" />
         </div>
 
       ) : isActive ? (
         <>
-          {/* ── Device Summary Card ── */}
-          <div className="ov-device-card" onClick={() => navigate("/dashboard/usage")}>
-            <div className="ov-device-card-header">
-              <span className="ov-device-icon">💧</span>
-              <div>
-                <p className="ov-device-id">{devIdStr}</p>
-                <p className={`ov-device-status ${deviceInfo?.isOnline ? "online" : "offline"}`}>
-                  ● {deviceInfo?.isOnline ? "Online" : "Offline"}
+          {/* ── Main card ── */}
+          <div className="ov-main-card" onClick={() => navigate("/dashboard/usage")}>
+
+            {/* Top accent strip */}
+            <div className="ov-card-strip" />
+
+            {/* Device row */}
+            <div className="ov-card-device-row">
+              <div className="ov-card-device-left">
+                <span className={`ov-dot ${isOnline ? "online" : "offline"}`} />
+                <span className="ov-card-devid">{devIdStr}</span>
+              </div>
+              <span className={`ov-chip ${isOnline ? "chip-on" : "chip-off"}`}>
+                {isOnline ? "Online" : "Offline"}
+              </span>
+            </div>
+
+            {/* Divider */}
+            <div className="ov-card-divider" />
+
+            {/* Usage numbers */}
+            <div className="ov-card-usage-row">
+              <div className="ov-card-metric">
+                <p className="ov-card-metric-label">Today's Usage</p>
+                <p className="ov-card-metric-val">
+                  {Number(todayLitres).toFixed(2)}
+                  <span className="ov-card-metric-unit"> L</span>
                 </p>
               </div>
-              <svg className="ov-ro-arrow" width="16" height="16" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" strokeWidth="2.5">
+              <div className="ov-card-metric-divider" />
+              <div className="ov-card-metric" style={{ textAlign: "right" }}>
+                <p className="ov-card-metric-label">Total Used</p>
+                <p className="ov-card-metric-val">
+                  {Number(litres).toFixed(1)}
+                  <span className="ov-card-metric-unit"> L</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className="ov-progress-wrap">
+              <div
+                className="ov-progress-fill"
+                style={{ width: `${Math.min((todayLitres / 14) * 100, 100)}%` }}
+              />
+            </div>
+            <p className="ov-progress-hint">
+              {todayLitres < 14
+                ? `${(14 - todayLitres).toFixed(1)} L below daily avg`
+                : "Above daily average · 14 L avg"}
+            </p>
+
+            {/* Divider */}
+            <div className="ov-card-divider" />
+
+            {/* Subscription meta row */}
+            <div className="ov-card-meta-row">
+              <div className="ov-card-meta-item">
+                <p className="ov-card-meta-label">Days Left</p>
+                <p className={`ov-card-meta-val ${daysClass}`}>
+                  {days !== null ? days : "—"}
+                </p>
+              </div>
+              <div className="ov-card-meta-sep" />
+              <div className="ov-card-meta-item">
+                <p className="ov-card-meta-label">Renews On</p>
+                <p className="ov-card-meta-val">{renewLabel}</p>
+              </div>
+              <div className="ov-card-meta-sep" />
+              <div className="ov-card-meta-item">
+                <p className="ov-card-meta-label">Plan</p>
+                <p className="ov-card-meta-val">{sub?.planId?.brandName || "RRO"}</p>
+              </div>
+            </div>
+
+            {/* Tap hint */}
+            <div className="ov-card-tap-row">
+              <span className="ov-card-tap-text">View full usage</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5">
                 <path d="M9 18l6-6-6-6"/>
               </svg>
             </div>
-
-            <div className="ov-device-stats">
-              <div className="ov-dstat">
-                <span className="ov-dstat-val">{days !== null ? days : "—"}</span>
-                <span className="ov-dstat-label">Days Left</span>
-              </div>
-              <div className="ov-dstat-divider" />
-<div className="ov-dstat">
-  <span className="ov-dstat-val">{Number(todayLitres).toFixed(1)} L</span>
-  <span className="ov-dstat-label">Today</span>
-</div>
-<div className="ov-dstat-divider" />
-<div className="ov-dstat">
-  <span className="ov-dstat-val">{Number(litres).toFixed(1)} L</span>
-  <span className="ov-dstat-label">Total Used</span>
-</div>
-              <div className="ov-dstat-divider" />
-              <div className="ov-dstat">
-                <span className="ov-dstat-val">
-                  {sub?.endDate
-                    ? new Date(sub.endDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                    : "—"}
-                </span>
-                <span className="ov-dstat-label">Renews On</span>
-              </div>
-            </div>
           </div>
 
-
+          {/* ── Renewal alert ── */}
+          {days !== null && days <= 7 && (
+            <div className="ov-renewal-alert">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5" style={{ flexShrink: 0, marginTop: 1 }}>
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span>
+                Subscription expires in{" "}
+                <strong>{days} day{days !== 1 ? "s" : ""}</strong>.
+                Renew to avoid interruption.
+              </span>
+            </div>
+          )}
         </>
 
       ) : isPending ? (
         <div className="ov-empty">
-          <div className="ov-empty-icon">🔧</div>
+          <div className="ov-empty-icon-wrap pending">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
           <h2 className="ov-empty-title">Installation Pending</h2>
           <p className="ov-empty-sub">
             Your subscription <strong>{sub.subscriptionCode}</strong> is confirmed.
-            A technician will install your RO soon.
+            A technician will install your RO unit shortly.
           </p>
-          <p style={{ fontSize: "0.78rem", color: "#9ca3af", marginTop: 8 }}>
-            Status: {sub.status.replace(/_/g, " ")}
-          </p>
+          <span className="ov-status-pill">{sub.status.replace(/_/g, " ")}</span>
         </div>
 
       ) : (
         <div className="ov-empty">
-          <div className="ov-empty-icon">💧</div>
-          <h2 className="ov-empty-title">No RO linked yet</h2>
+          <div className="ov-empty-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path d="M12 8v8M8 12h8"/>
+            </svg>
+          </div>
+          <h2 className="ov-empty-title">No active subscription</h2>
           <p className="ov-empty-sub">
-            Connect your smart RO system or purchase a new one to get started.
+            Get started by connecting your RO device or purchasing a new plan.
           </p>
           <div className="ov-empty-actions">
-            <button className="ov-btn-primary" onClick={() => navigate("/device/connect")}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
-              Add RO Device
+            <button className="ov-btn-primary" onClick={() => navigate("/product")}>
+              View Plans
             </button>
-            <button className="ov-btn-ghost" onClick={() => navigate("/product")}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2.5">
-                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61H19a2 2 0 001.97-1.67l1.38-7.33H6"/>
-              </svg>
-              Purchase RO
+            <button className="ov-btn-ghost" onClick={() => navigate("/device/connect")}>
+              Connect Device
             </button>
           </div>
         </div>
