@@ -52,7 +52,7 @@ export default function OverviewPage() {
 
             // Step 3: Fetch overview for totalLitres
             try {
-              const { data: ovRes } = await api.get(`/devices/overview/${devIdString}`);
+              const { data: ovRes } = await api.get(`/water/${devIdString}/overview`);
               setLitres(ovRes?.data?.totalLitres ?? 0);
               // Also update device with fresh isOnline status
               if (ovRes?.data?.device) setDevice(ovRes.data.device);
