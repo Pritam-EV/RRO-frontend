@@ -97,57 +97,63 @@ export default function ProductCheckoutPage() {
     if (!showZohoWidget || !zohoApiKey || !zohoSessionId) return;
 
     // Load Zoho script dynamically
-    const existing = document.getElementById("zoho-payments-sdk");
-    const mountWidget = () => {
-      if (!window.ZohoPayments) {
-        setApiError("Payment gateway failed to load. Please refresh.");
-        return;
+    const existing = document.getElementById("zpayments-sdk");
+const mountWidget = () => {
+  if (!window.ZPayments) {
+    setApiError("Payment gateway failed to load. Please refresh.");
+    return;
+  }
+
+  // ✅ Correct Zoho Payments widget init
+const config = {
+  account_id: import.meta.env.VITE_ZOHO_ACCOUNT_ID,
+  domain: "IN",
+  otherOptions: { api_key: zohoApiKey },
+};
+
+  const instance = new window.ZPayments(config);
+
+  instance.requestPayment({
+    session_id: zohoSessionId,
+    onSuccess: async (response) => {
+      setShowZohoWidget(false);
+      setLoading(true);
+      try {
+        const { data } = await api.get(`/payments/verify/${referenceNumber}`);
+        if (data.data?.status === "succeeded") {
+          const orderRes = await api.post("/subscriptions/order", {
+            planId:          plan._id,
+            deliveryAddress: addr,
+            paymentMethod:   payment,
+            deliverySlot:    slot,
+            referenceNumber,
+          });
+          setConfirmed(orderRes.data.data);
+        } else {
+          setApiError("Payment not confirmed yet. Check payment history.");
+        }
+      } catch (err) {
+        setApiError("Payment done but order failed. Contact support. Ref: " + referenceNumber);
+      } finally {
+        setLoading(false);
       }
-      const widget = window.ZohoPayments.initiate({
-        apiKey:    zohoApiKey,
-        sessionId: zohoSessionId,
-        container: "#zoho-widget-container",
-        onSuccess: async (response) => {
-          setShowZohoWidget(false);
-          setLoading(true);
-          try {
-            // Verify with backend
-            const { data } = await api.get(`/payments/verify/${referenceNumber}`);
-            if (data.data?.status === "succeeded") {
-              // Now place the subscription order as paid
-              const orderRes = await api.post("/subscriptions/order", {
-                planId:          plan._id,
-                deliveryAddress: addr,
-                paymentMethod:   payment,
-                deliverySlot:    slot,
-                referenceNumber, // backend can link payment
-              });
-              setConfirmed(orderRes.data.data);
-            } else {
-              setApiError("Payment not confirmed yet. Please check your payment history.");
-            }
-          } catch (err) {
-            setApiError("Payment done but order failed. Contact support with ref: " + referenceNumber);
-          } finally {
-            setLoading(false);
-          }
-        },
-        onFailure: (response) => {
-          setShowZohoWidget(false);
-          setApiError("Payment failed or cancelled. Please try again.");
-        },
-        onClose: () => {
-          setShowZohoWidget(false);
-        },
-      });
-    };
+    },
+    onFailure: (response) => {
+      setShowZohoWidget(false);
+      setApiError("Payment failed or cancelled. Please try again.");
+    },
+    onClose: () => {
+      setShowZohoWidget(false);
+    },
+  });
+};
 
     if (existing) {
       mountWidget();
     } else {
       const script = document.createElement("script");
-      script.id    = "zoho-payments-sdk";
-      script.src   = "https://js.zoho.com/payments/v1/checkout.js";
+      script.id    = "zpayments-sdk";
+      script.src   = "https://static.zohocdn.com/zpay/zpay-js/v1/zpayments.js";
       script.async = true;
       script.onload = mountWidget;
       script.onerror = () => setApiError("Failed to load payment gateway.");
