@@ -28,7 +28,7 @@ function fmtDate(d) {
 const PENDING_META = {
   payment_pending: {
     label:   "Payment Pending",
-    msg:     "Complete your payment to confirm the order and schedule installation.",
+    msg:     "A technician has been assigned and will visit your location shortly.",
     accent:  "#f59e0b",
     bgStrip: "linear-gradient(90deg,#f59e0b,#fbbf24)",
   },
