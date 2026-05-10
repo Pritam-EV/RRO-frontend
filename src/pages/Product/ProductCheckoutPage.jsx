@@ -85,6 +85,8 @@ export default function ProductCheckoutPage() {
       setZohoSessionId(data.data.zohoSessionId);
       setReferenceNumber(data.data.referenceNumber);
       setShowZohoWidget(true);
+      console.log("[Payment] zohoSessionId:", data.data.zohoSessionId);
+console.log("[Payment] zohoApiKey:", data.data.zohoApiKey?.slice(0, 20));
     } catch (err) {
       setApiError(err.response?.data?.message || "Could not initiate payment. Try again.");
     } finally {
@@ -104,23 +106,41 @@ const mountWidget = () => {
     return;
   }
 
-  // ✅ Correct Zoho Payments widget init
-const config = {
-  account_id: import.meta.env.VITE_ZOHO_ACCOUNT_ID,
-  domain: "IN",
-  otherOptions: { api_key: zohoApiKey },
-};
+  const config = {
+    account_id: import.meta.env.VITE_ZOHO_ACCOUNT_ID,
+    domain: "IN",
+    otherOptions: { api_key: zohoApiKey },
+  };
 
   const instance = new window.ZPayments(config);
 
-  instance.requestPayment({
-    session_id: zohoSessionId,
-    onSuccess: async (response) => {
+  // ✅ Correct: async/await pattern, correct function name, correct field names
+  async function initiatePayment() {
+    try {
+      const options = {
+        amount:              String(firstAmount),
+        currency_code:       "INR",
+        currency_symbol:     "₹",
+        payments_session_id: zohoSessionId,   // ✅ correct field
+        reference_number:    referenceNumber,
+        description:         `RRO ${plan.brandName} ${plan.modelName} Subscription`,
+        business:            "RRO - VJRA Technologies",
+        address: {
+          name:  addr.fullName || "Customer",
+          phone: addr.mobile   || "",
+        },
+      };
+
+      // ✅ correct method name — returns payment_id on success
+      const data = await instance.requestPaymentMethod(options);
+
+      // data contains payment_id
       setShowZohoWidget(false);
       setLoading(true);
+
       try {
-        const { data } = await api.get(`/payments/verify/${referenceNumber}`);
-        if (data.data?.status === "succeeded") {
+        const { data: verifyRes } = await api.get(`/payments/verify/${referenceNumber}`);
+        if (verifyRes.data?.status === "succeeded") {
           const orderRes = await api.post("/subscriptions/order", {
             planId:          plan._id,
             deliveryAddress: addr,
@@ -137,15 +157,19 @@ const config = {
       } finally {
         setLoading(false);
       }
-    },
-    onFailure: (response) => {
+
+    } catch (err) {
+      // err.code === "widget_closed" means user cancelled
+      if (err?.code !== "widget_closed") {
+        setApiError("Payment failed: " + (err?.message || "Unknown error"));
+      }
       setShowZohoWidget(false);
-      setApiError("Payment failed or cancelled. Please try again.");
-    },
-    onClose: () => {
-      setShowZohoWidget(false);
-    },
-  });
+    } finally {
+      await instance.close();
+    }
+  }
+
+  initiatePayment();
 };
 
     if (existing) {
