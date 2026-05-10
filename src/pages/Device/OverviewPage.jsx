@@ -130,7 +130,12 @@ function ActiveCard({ sub, navigate }) {
   const loading   = litres === null;
 
   return (
-    <div className="ov-main-card" onClick={() => navigate("/dashboard/usage")}>
+    <div className="ov-main-card" onClick={() => {
+  const devIdStr = typeof sub.deviceId === "object"
+    ? sub.deviceId?.deviceId
+    : null;
+  navigate("/dashboard/usage", { state: { deviceId: devIdStr } });
+}}>
 
       {/* Top accent strip */}
       <div className="ov-card-strip" />

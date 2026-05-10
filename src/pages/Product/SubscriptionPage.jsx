@@ -1,3 +1,4 @@
+// src/pages/Product/SubscriptionPage.jsx
 import React, { useState, useEffect } from "react";
 import "./SubscriptionPage.css";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +49,7 @@ const SubCard = ({ sub, defaultOpen }) => {
   return (
     <article className={`sp-card${open ? " sp-card--open" : ""}${isLive ? " sp-card--live" : ""}`}>
 
-      {/* ── Collapsed row — always visible ── */}
+      {/* ── Collapsed row ── */}
       <button
         className="sp-card__row sp-card__row--sub"
         onClick={() => setOpen((o) => !o)}
@@ -165,48 +166,62 @@ const SubCard = ({ sub, defaultOpen }) => {
   );
 };
 
-/* ══════════════════════════════════════════════════════════════ */
+/* ── Skeleton ── */
+const PageSkeleton = () => (
+  <div className="sp-page">
+    <div className="sp-section-header">
+      <span className="sp-section-label">Current Subscriptions</span>
+    </div>
+    {[1, 2].map(i => (
+      <div key={i} className="sp-sk-card" />
+    ))}
+  </div>
+);
+
+/* ══════════════════════════════════════════════════════════════
+   SubscriptionPage
+══════════════════════════════════════════════════════════════ */
 export default function SubscriptionPage() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState("");
-  const [current, setCurrent] = useState(null);
-  const [history, setHistory] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const [error,    setError]    = useState("");
+
+  // ✅ Array — all live subs (active + pending)
+  const [currSubs, setCurrSubs] = useState([]);
+  // ✅ Array — only expired/cancelled
+  const [pastSubs, setPastSubs] = useState([]);
 
   useEffect(() => {
-    const load = async () => {
+    (async () => {
       try {
         const [myRes, histRes] = await Promise.all([
           api.get("/subscriptions/my"),
           api.get("/subscriptions/history"),
         ]);
-        setCurrent(myRes.data?.data?.subscription || null);
-        setHistory(histRes.data?.data?.subscriptions || []);
+
+        // ✅ read subscriptions[] array (new backend) with fallback to old single
+        const myData = myRes.data?.data;
+        if (Array.isArray(myData?.subscriptions)) {
+          setCurrSubs(myData.subscriptions);
+        } else if (myData?.subscription) {
+          setCurrSubs([myData.subscription]);
+        } else {
+          setCurrSubs([]);
+        }
+
+        // history = expired/cancelled only (backend already filters)
+        setPastSubs(histRes.data?.data?.subscriptions || []);
+
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load subscriptions.");
       } finally {
         setLoading(false);
       }
-    };
-    load();
+    })();
   }, []);
 
-  const pastSubs = current
-    ? history.filter((s) => s._id !== current._id)
-    : history;
+  if (loading) return <PageSkeleton />;
 
-  /* ── Loading ── */
-  if (loading)
-    return (
-      <div className="sp-page">
-        <div className="sp-feedback">
-          <span className="sp-spinner" />
-          <p>Loading your plans…</p>
-        </div>
-      </div>
-    );
-
-  /* ── Error ── */
   if (error)
     return (
       <div className="sp-page">
@@ -217,27 +232,37 @@ export default function SubscriptionPage() {
   return (
     <div className="sp-page">
 
-      {/* ── Current Subscription ── */}
+      {/* ══ CURRENT SUBSCRIPTIONS ══ */}
       <div className="sp-section-header">
-        <span className="sp-section-label">Current Subscription</span>
+        <span className="sp-section-label">Current Subscriptions</span>
+        {currSubs.length > 0 && (
+          <span className="sp-count">{currSubs.length}</span>
+        )}
       </div>
 
-      {current ? (
-        <SubCard sub={current} defaultOpen={true} />
+      {currSubs.length > 0 ? (
+        <div className="sp-list">
+          {/* First one open by default, rest collapsed */}
+          {currSubs.map((s, i) => (
+            <SubCard key={s._id} sub={s} defaultOpen={i === 0} />
+          ))}
+        </div>
       ) : (
         <div className="sp-empty">
           <p className="sp-empty__title">No active subscription</p>
-          <p className="sp-empty__sub">Browse plans and get purified water delivered to your door.</p>
+          <p className="sp-empty__sub">
+            Browse plans and get purified water delivered to your door.
+          </p>
           <button className="sp-card__btn" onClick={() => navigate("/product")}>
             Browse Plans
           </button>
         </div>
       )}
 
-      {/* ── Past Orders ── */}
+      {/* ══ PAST ORDERS ══ */}
       {pastSubs.length > 0 && (
         <>
-          <div className="sp-section-header" style={{ marginTop: "20px" }}>
+          <div className="sp-section-header" style={{ marginTop: "24px" }}>
             <span className="sp-section-label">Past Orders</span>
             <span className="sp-count">{pastSubs.length}</span>
           </div>

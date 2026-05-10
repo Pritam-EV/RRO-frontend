@@ -468,6 +468,16 @@
 .myplan-empty__btn:hover  { background: #2447d5; transform: translateY(-1px); }
 .myplan-empty__btn:active { background: #1a38c0; transform: translateY(0); }
 
+/* skeleton */
+.sp-sk-card {
+  height: 64px;
+  border-radius: 16px;
+  background: var(--d-border);
+  margin-bottom: 0.625rem;
+  animation: sp-pulse 1.4s ease-in-out infinite;
+}
+@keyframes sp-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
 /* ── Tiny screens ── */
 @media (max-width: 380px) {
   .myplan-body { padding: 12px 10px 90px; }
