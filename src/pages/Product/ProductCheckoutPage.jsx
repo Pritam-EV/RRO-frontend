@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+// src/pages/Product/ProductCheckoutPage.jsx
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import "./ProductCheckoutPage.css";
 
 const STEPS = ["Plan", "Address", "Payment", "Delivery"];
-
 const initialAddress = { fullName: "", mobile: "", address: "", pincode: "", city: "" };
 
 export default function ProductCheckoutPage() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const plan     = location.state?.plan;
+  const navigate  = useNavigate();
+  const plan      = location.state?.plan;
 
-  const [step, setStep]         = useState(0);
-  const [addr, setAddr]         = useState(initialAddress);
+  const [step, setStep]           = useState(0);
+  const [addr, setAddr]           = useState(initialAddress);
   const [addrErrors, setAddrErrors] = useState({});
-  const [payment, setPayment]   = useState("");
-  const [slot, setSlot]         = useState("");
-  const [loading, setLoading]   = useState(false);
-  const [apiError, setApiError] = useState("");
-  const [confirmed, setConfirmed] = useState(null); // subscription response
+  const [payment, setPayment]     = useState("");
+  const [slot, setSlot]           = useState("");
+  const [loading, setLoading]     = useState(false);
+  const [apiError, setApiError]   = useState("");
+  const [confirmed, setConfirmed] = useState(null);
+
+  // Zoho widget state
+  const [zohoSessionId, setZohoSessionId] = useState(null);
+  const [zohoApiKey, setZohoApiKey]       = useState(null);
+  const [referenceNumber, setReferenceNumber] = useState(null);
+  const [showZohoWidget, setShowZohoWidget]   = useState(false);
+  const zohoContainerRef = useRef(null);
 
   if (!plan) {
     return (
@@ -45,14 +52,15 @@ export default function ProductCheckoutPage() {
     return Object.keys(e).length === 0;
   };
 
-  const handleConfirm = async () => {
+  // ── COD flow: place order directly ──────────────────────
+  const handleCODOrder = async () => {
     setLoading(true);
     setApiError("");
     try {
       const { data } = await api.post("/subscriptions/order", {
         planId:          plan._id,
         deliveryAddress: addr,
-        paymentMethod:   payment,
+        paymentMethod:   "cod",
         deliverySlot:    slot,
       });
       setConfirmed(data.data);
@@ -60,6 +68,99 @@ export default function ProductCheckoutPage() {
       setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ── UPI/Card flow: initiate Zoho session ────────────────
+  const handleOnlinePayment = async () => {
+    setLoading(true);
+    setApiError("");
+    try {
+      const { data } = await api.post("/payments/initiate", {
+        amount:               firstAmount,
+        purpose:              "subscription",
+        subscriptionPlanName: `${plan.brandName} ${plan.modelName}`,
+      });
+      setZohoApiKey(data.data.zohoApiKey);
+      setZohoSessionId(data.data.zohoSessionId);
+      setReferenceNumber(data.data.referenceNumber);
+      setShowZohoWidget(true);
+    } catch (err) {
+      setApiError(err.response?.data?.message || "Could not initiate payment. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ── Load Zoho widget once we have session ────────────────
+  useEffect(() => {
+    if (!showZohoWidget || !zohoApiKey || !zohoSessionId) return;
+
+    // Load Zoho script dynamically
+    const existing = document.getElementById("zoho-payments-sdk");
+    const mountWidget = () => {
+      if (!window.ZohoPayments) {
+        setApiError("Payment gateway failed to load. Please refresh.");
+        return;
+      }
+      const widget = window.ZohoPayments.initiate({
+        apiKey:    zohoApiKey,
+        sessionId: zohoSessionId,
+        container: "#zoho-widget-container",
+        onSuccess: async (response) => {
+          setShowZohoWidget(false);
+          setLoading(true);
+          try {
+            // Verify with backend
+            const { data } = await api.get(`/payments/verify/${referenceNumber}`);
+            if (data.data?.status === "succeeded") {
+              // Now place the subscription order as paid
+              const orderRes = await api.post("/subscriptions/order", {
+                planId:          plan._id,
+                deliveryAddress: addr,
+                paymentMethod:   payment,
+                deliverySlot:    slot,
+                referenceNumber, // backend can link payment
+              });
+              setConfirmed(orderRes.data.data);
+            } else {
+              setApiError("Payment not confirmed yet. Please check your payment history.");
+            }
+          } catch (err) {
+            setApiError("Payment done but order failed. Contact support with ref: " + referenceNumber);
+          } finally {
+            setLoading(false);
+          }
+        },
+        onFailure: (response) => {
+          setShowZohoWidget(false);
+          setApiError("Payment failed or cancelled. Please try again.");
+        },
+        onClose: () => {
+          setShowZohoWidget(false);
+        },
+      });
+    };
+
+    if (existing) {
+      mountWidget();
+    } else {
+      const script = document.createElement("script");
+      script.id    = "zoho-payments-sdk";
+      script.src   = "https://js.zoho.com/payments/v1/checkout.js";
+      script.async = true;
+      script.onload = mountWidget;
+      script.onerror = () => setApiError("Failed to load payment gateway.");
+      document.body.appendChild(script);
+    }
+  }, [showZohoWidget, zohoApiKey, zohoSessionId]);
+
+  // ── Main confirm handler (step 3) ────────────────────────
+  const handleConfirm = () => {
+    if (payment === "cod") {
+      handleCODOrder();
+    } else {
+      handleOnlinePayment();
     }
   };
 
@@ -76,6 +177,32 @@ export default function ProductCheckoutPage() {
     if (step === 0) navigate(-1);
     else setStep((s) => s - 1);
   };
+
+  /* ── Zoho Widget Overlay ── */
+  if (showZohoWidget) {
+    return (
+      <div className="co-page">
+        <div className="co-topbar">
+          <button className="co-back" onClick={() => setShowZohoWidget(false)}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12.5 15l-5-5 5-5" stroke="currentColor" strokeWidth="1.8"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <span className="co-topbar__title">Complete Payment</span>
+          <div style={{ width: 32 }} />
+        </div>
+        <div className="co-section" style={{ paddingTop: 16 }}>
+          <p style={{ marginBottom: 12, color: "var(--color-text-muted, #666)", fontSize: 14 }}>
+            Amount: <strong>₹{firstAmount}</strong> · Ref: <code style={{ fontSize: 12 }}>{referenceNumber}</code>
+          </p>
+          {apiError && <p className="co-error">{apiError}</p>}
+          <div id="zoho-widget-container" ref={zohoContainerRef}
+            style={{ minHeight: 400, border: "1px solid #eee", borderRadius: 8 }} />
+        </div>
+      </div>
+    );
+  }
 
   /* ── Success screen ── */
   if (confirmed) {
@@ -98,12 +225,14 @@ export default function ProductCheckoutPage() {
               <span>{confirmed.deliverySlot}</span>
             </div>
             <div className="co-row co-row--total">
-              <span>Due on delivery</span>
-              <strong>₹{confirmed.firstPayment}</strong>
+              <span>{payment === "cod" ? "Due on delivery" : "Paid"}</span>
+              <strong>₹{confirmed.firstPayment || firstAmount}</strong>
             </div>
           </div>
           <p className="co-success__note">
-            Our team will contact you to confirm installation. Payment is collected at delivery.
+            {payment === "cod"
+              ? "Our team will contact you. Payment collected at delivery."
+              : "Payment received. Our team will contact you for installation."}
           </p>
           <button className="co-btn" onClick={() => navigate("/dashboard")}>
             Go to Dashboard
@@ -257,11 +386,15 @@ export default function ProductCheckoutPage() {
         {step === 2 && (
           <div className="co-section">
             <h4 className="co-section__title">Payment Method</h4>
-            <p className="co-section__sub">Payment is collected at delivery — nothing charged now.</p>
+            <p className="co-section__sub">
+              {payment === "cod" || !payment
+                ? "Pay when your device arrives — nothing charged now."
+                : "You'll complete payment on the next screen via Zoho Pay."}
+            </p>
             <div className="co-payment-opts">
               {[
-                { id: "upi",  icon: "📱", label: "UPI",  sub: "PhonePe, GPay, Paytm" },
-                { id: "card", icon: "💳", label: "Card", sub: "Debit or Credit card" },
+                { id: "upi",  icon: "📱", label: "UPI",  sub: "PhonePe, GPay, Paytm — pay now" },
+                { id: "card", icon: "💳", label: "Card", sub: "Debit or Credit card — pay now" },
                 { id: "cod",  icon: "💵", label: "Cash on Delivery", sub: "Pay when device arrives" },
               ].map((opt) => (
                 <div key={opt.id}
@@ -308,12 +441,18 @@ export default function ProductCheckoutPage() {
               ))}
             </div>
 
-            {/* Order summary */}
             <div className="co-confirm-summary">
               <div className="co-row"><span>Plan</span><span>{plan.brandName} {plan.modelName}</span></div>
-              <div className="co-row"><span>Payment</span><span style={{ textTransform: "capitalize" }}>{payment}</span></div>
+              <div className="co-row"><span>Payment</span>
+                <span style={{ textTransform: "capitalize" }}>
+                  {payment === "cod" ? "Cash on Delivery" : payment.toUpperCase()}
+                </span>
+              </div>
               <div className="co-row"><span>Address</span><span>{addr.city}, {addr.pincode}</span></div>
-              <div className="co-row co-row--total"><span>Due on delivery</span><strong>₹{firstAmount}</strong></div>
+              <div className="co-row co-row--total">
+                <span>{payment === "cod" ? "Due on delivery" : "To pay now"}</span>
+                <strong>₹{firstAmount}</strong>
+              </div>
             </div>
 
             {apiError && <p className="co-error" style={{ marginTop: 10 }}>{apiError}</p>}
@@ -326,12 +465,15 @@ export default function ProductCheckoutPage() {
       <div className="co-footer">
         <button className="co-btn" onClick={next}
           disabled={(step === 3 && !slot) || loading}>
-          {loading ? "Placing order…" : (
+          {loading ? (payment === "cod" ? "Placing order…" : "Opening payment…") : (
             <>
               {step === 0 && "Continue to Address"}
               {step === 1 && "Save Address"}
               {step === 2 && "Continue to Delivery"}
-              {step === 3 && `Confirm Order · ₹${firstAmount}`}
+              {step === 3 && (payment === "cod"
+                ? `Confirm Order · ₹${firstAmount}`
+                : `Pay ₹${firstAmount} · ${payment?.toUpperCase()}`
+              )}
             </>
           )}
         </button>
